@@ -1,5 +1,5 @@
 { pkgs ? import <nixpkgs> {} }:
 with pkgs;
 mkShell {
-  buildInputs = [ scdoc ];
+  buildInputs = [ scdoc secp256k1 gdb autoreconfHook ];
 }

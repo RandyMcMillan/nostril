@@ -1,0 +1,2 @@
+#!/usr/bin/env sh
+nostril --sec $(echo "$(git log -1 --format=%H)" | awk '{ $1=sprintf("%064s", $1); print $0}') --content "$(git diff HEAD)"
