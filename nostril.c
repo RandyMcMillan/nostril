@@ -575,7 +575,7 @@ static int make_encrypted_dm(secp256k1_context *ctx, struct key *key,
 
 	make_cursor(buf, buf + buflen, &cur);
 
-        if (!secp256k1_ec_seckey_verify(ctx, key->secret)) {
+	if (!secp256k1_ec_seckey_verify(ctx, key->secret)) {
 		fprintf(stderr, "make_encrypted_dm: ec_seckey_verify failed\n");
 		return 0;
 	}
