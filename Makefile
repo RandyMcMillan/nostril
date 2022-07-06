@@ -1,4 +1,8 @@
-
+ifneq ($(wildcard /usr/local/bin),)
+       PREFIX := /usr/local/bin
+else
+       PREFIX := /usr/bin
+endif
 CFLAGS = -Wall -Og
 OBJS = sha256.o nostril.o aes.o base64.o
 HEADERS = hex.h random.h config.h sha256.h
@@ -10,16 +14,17 @@ all: nostril
 	@$(CC) $(CFLAGS) -c $< -o $@
 
 nostril: $(HEADERS) $(OBJS)
-	$(CC) $(CFLAGS) $(OBJS) -lsecp256k1 -o $@ 
+	$(CC) $(CFLAGS) $(OBJS) -lsecp256k1 -o $@
 
 install: nostril
 	mkdir -p $(PREFIX)/bin
-	cp nostril $(PREFIX)/bin
+	cp nostril $(PREFIX)
+	cp scripts/* $(PREFIX)/
 
-config.h: configurator                                                          
-	./configurator > $@                                                     
+config.h: configurator
+	./configurator > $@
 
-configurator: configurator.c                                                    
+configurator: configurator.c
 	$(CC) $< -o $@
 
 clean:
