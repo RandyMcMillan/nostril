@@ -89,6 +89,23 @@ void usage()
            "<event_id>\n");
     printf(
         "      -p <pubkey>                     shorthand for --tag p <pubkey>\n");
+    printf("\n");
+    printf("\n");
+    printf("  EXAMPLES\n");
+    printf("\n");
+    printf("      nostril --sec <hex seckey> \"this is a message\"");
+    printf("\n");
+    printf("      nostril --envelope --sec <hex seckey> \"hello\"");
+    printf("\n");
+    printf("      nostril --envelope --sec <hex seckey> --content 'nostril event content' | websocat wss://relay.damus.io");
+    printf("\n");
+    printf("\n");
+    printf("  ADDITIONAL EXAMPLES\n");
+    printf("\n");
+    printf("      nostril --envelope --sec <hex seckey> --content \"$(echo 'gpg signed nostril event' | gpg --clear-sign -q)\" | websocat wss://relay.damus.io");
+    printf("\n");
+    printf("\n");
+
     exit(1);
 }
 
