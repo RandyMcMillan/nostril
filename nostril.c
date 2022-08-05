@@ -83,7 +83,7 @@ void usage()
     printf("      --sec <hex seckey>              set the secret key for "
            "signing, otherwise one will be randomly generated\n");
     printf("      --pow <difficulty>              number of leading 0 bits of "
-           "the id to mine\n");
+           "the id to mine examples: 0,4,8,16,...\n");
     printf("      --tag <key> <value>             add a tag\n");
     printf("      -e <event_id>                   shorthand for --tag e "
            "<event_id>\n");
