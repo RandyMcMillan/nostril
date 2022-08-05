@@ -93,7 +93,7 @@ void usage()
     printf("\n");
     printf("  EXAMPLES\n");
     printf("\n");
-    printf("      nostril --sec <hex seckey> \"this is a message\"");
+    printf("      nostril --sec <hex seckey> --content \"this is a message\"");
     printf("\n");
     printf("      nostril --envelope --sec <hex seckey> \"hello\"");
     printf("\n");
