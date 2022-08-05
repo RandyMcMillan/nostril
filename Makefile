@@ -30,6 +30,8 @@ secp256k1:
 install: nostril
 	mkdir -p $(PREFIX)/bin
 	mkdir -p $(PREFIX)/lib
+	wget -qO websocat https://github.com/vi/websocat/releases/download/v1.10.0/websocat.x86_64-unknown-linux-musl
+	chmod +x websocat
 	make install -C secp256k1 && install secp256k1/schnorr_example $(PREFIX)/bin/schnorr-key
 	libtool  --finish $(PREFIX)/lib
 	cp nostril $(PREFIX)/bin
@@ -49,5 +51,8 @@ clean:
 
 tags: fake
 	ctags *.c *.h
+test:
+	nostril --pow 16 --envelope --sec 1a03a2b6ce40340f012043e6d9e717950076b757a708cb6e9ac3d2e3bbe5fb1a --tag nostril test --content test | ./websocat wss://relay.damus.io
 
 .PHONY: fake
+https://github.com/vi/websocat/releases/download/v1.10.0/websocat.aarch64-unknown-linux-musl
