@@ -12,18 +12,21 @@ uname_V := $(shell sh -c 'uname -v 2>/dev/null || echo not')
 	@echo $(uname_R)
 	@echo $(uname_P)
 	#@echo $(uname_V)
-
 ifeq ($(uname_S),Linux)
+	WEBSOCAT=:https://github.com/vi/websocat/releases/download/v1.10.0/websocat.$(uname_M)-unknown-linux-musl
 endif
 ifeq ($(uname_S),Darwin)
+	WEBSOCAT=:https://github.com/vi/websocat/releases/download/v1.10.0/websocat.$(uname_M)-apple-darwin
 endif
 ifeq ($(uname_S),FreeBSD)
+	WEBSOCAT=:https://github.com/vi/websocat/releases/download/v1.10.0/websocat.$(uname_M)-unknown-freebsd
 endif
 ifeq ($(uname_S),OpenBSD)
+	endif
 endif
 ifeq ($(uname_S),NetBSD)
 endif
-
+	@echo $(WEBSOCAT)
 
 
 
@@ -69,10 +72,10 @@ install: nostril
 	chgrp -R $(USER) $(PREFIX)
 
 
-config.h: configurator                                                          
-	./configurator > $@                                                     
+config.h: configurator
+	./configurator > $@
 
-configurator: configurator.c                                                    
+configurator: configurator.c
 	$(CC) $< -o $@
 
 clean:
