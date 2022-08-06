@@ -30,12 +30,12 @@ endif
 
 
 
-ifneq ($(wildcard /usr/local/bin),)
+# ifneq ($(wildcard /usr/local/bin),)
        PREFIX := /usr/local
-else
-       PREFIX := /usr
-endif
-PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin:/sbin" ldconfig -n /usr/local/lib
+# else
+#       PREFIX := /usr
+# endif
+# PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin:/sbin" ldconfig -n /usr/local/lib
 
 LD_LIBRARY_PATH=/usr/local/lib
 export LD_LIBRARY_PATH
