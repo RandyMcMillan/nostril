@@ -1,0 +1,6 @@
+[submodule "websc"]
+	path = websc
+	url = ./websc
+[submodule "secp256k1"]
+	path = secp256k1
+	url = ./secp256k1

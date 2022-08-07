@@ -1,4 +1,3 @@
-secp256k1
 *.o
 /.direnv/
 .envrc
