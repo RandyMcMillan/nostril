@@ -83,6 +83,6 @@ clean:
 tags: fake
 	ctags *.c *.h
 test:
-	nostril --pow 16 --envelope --sec 1a03a2b6ce40340f012043e6d9e717950076b757a708cb6e9ac3d2e3bbe5fb1a --tag nostril test --content test | ./websocat wss://relay.damus.io
+	nostril --pow 16 --envelope --sec 1a03a2b6ce40340f012043e6d9e717950076b757a708cb6e9ac3d2e3bbe5fb1a --tag nostril test --content test | websocat wss://relay.damus.io
 
 .PHONY: fake
