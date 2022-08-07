@@ -12,6 +12,12 @@ uname_V := $(shell sh -c 'uname -v 2>/dev/null || echo not')
 	@echo $(uname_R)
 	@echo $(uname_P)
 	#@echo $(uname_V)
+	
+websocat:
+	git clone https://github.com/vi/websocat.git websc || true
+	mkdir -p /usr/local/bin
+	cd websc && cargo install --path=. && install -v target/release/websocat /usr/local/bin
+
 ifeq ($(uname_S),Linux)
 	WEBSOCAT=:https://github.com/vi/websocat/releases/download/v1.10.0/websocat.$(uname_M)-unknown-linux-musl
 endif
@@ -22,7 +28,6 @@ ifeq ($(uname_S),FreeBSD)
 	WEBSOCAT=:https://github.com/vi/websocat/releases/download/v1.10.0/websocat.$(uname_M)-unknown-freebsd
 endif
 ifeq ($(uname_S),OpenBSD)
-	endif
 endif
 ifeq ($(uname_S),NetBSD)
 endif
@@ -43,7 +48,7 @@ CFLAGS = -Wall -Og
 OBJS = sha256.o nostril.o aes.o base64.o
 HEADERS = hex.h random.h config.h sha256.h
 
-all: install nostril secp256k1
+all: install websocat nostril secp256k1
 
 %.o: %.c config.h
 	@echo "cc $<"

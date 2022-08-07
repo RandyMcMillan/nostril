@@ -255,7 +255,7 @@ static int decode_key(secp256k1_context* ctx, const char* secstr,
                       struct key* key)
 {
     if (!hex_decode(secstr, strlen(secstr), key->secret, 32)) {
-        fprintf(stderr, "could not hex decode secret key\n");
+        fprintf(stdout, "could not hex decode secret key\n");
         return 0;
     }
 
