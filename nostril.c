@@ -104,7 +104,8 @@ void usage()
     printf("\n");
     printf("      nostril --envelope --sec <hex seckey> --content \"$(echo 'gpg signed nostril event' | gpg --clear-sign -q)\" | websocat wss://relay.damus.io");
     printf("\n");
-    printf("\n");
+    printf("      nostril --sec $(echo $(cat nostr.privkey.txt.gpg | gpg -q --decrypt --textmode))            --content test\n");
+    printf("      nostril --sec $(echo $(cat nostr.privkey.txt.gpg | gpg -q --decrypt --textmode)) --envelope --content test | websocat wss://relay.damus.io\n");
 
     exit(1);
 }
