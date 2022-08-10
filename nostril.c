@@ -100,15 +100,26 @@ void usage()
     printf("      nostril --envelope --sec <hex seckey> --content 'nostril event content' | websocat wss://relay.damus.io");
     printf("\n");
     printf("\n");
+    printf("  NIP-01: set_metadata");
+    printf("\n");
+    printf("      nostril --sec <hex seckey> --envelope --kind 0 --content \"{\"name\": \"your_name\", \"about\": \"about_string\", \"picture\": \"https://<url_string>\"}");
+    printf("\n");
+    printf("\n");
     printf("  ADDITIONAL EXAMPLES\n");
     printf("\n");
     printf("  GPG EXAMPLES\n");
+    printf("\n");
+    printf("      Encrypt your nostr privkey (one line with privkey only)\n");
+    printf("\n");
+    printf("      gpg -e -r BB06757B nostr.privkey.txt\n");
     printf("\n");
     printf("      nostril --envelope --sec <hex seckey> --content \"$(echo 'gpg signed nostril event' | gpg --clear-sign -q)\" | websocat wss://relay.damus.io");
     printf("\n");
     printf("      nostril --sec $(echo $(cat nostr.privkey.txt.gpg | gpg -q --decrypt --textmode))            --content test\n");
     printf("      nostril --sec $(echo $(cat nostr.privkey.txt.gpg | gpg -q --decrypt --textmode)) --envelope --content test | websocat wss://relay.damus.io\n");
-
+    printf("\n");
+    printf("      nostril --sec $(echo $(cat nostr.privkey.txt.gpg | gpg -q --decrypt --textmode)) --envelope --kind 0 --content \"{\"name\": \"your_name\", \"about\": \"about_string\", \"picture\": \"https://<url_string>\"}");
+    printf("\n");
     exit(1);
 }
 
