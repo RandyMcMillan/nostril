@@ -4,3 +4,6 @@
 [submodule "secp256k1"]
 	path = secp256k1
 	url = https://github.com/bitcoin-core/secp256k1.git
+[submodule "bip85"]
+	path = bip85
+	url = https://github.com/ethankosakovsky/bip85.git
