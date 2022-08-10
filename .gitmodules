@@ -1,6 +1,6 @@
 [submodule "websc"]
 	path = websc
-	url = ./websc
+	url = https://github.com/vi/websocat.git
 [submodule "secp256k1"]
 	path = secp256k1
-	url = ./secp256k1
+	url = https://github.com/bitcoin-core/secp256k1.git
