@@ -1,4 +1,6 @@
-LD_LIBRARY_PATH=/usr/local/lib
+PREFIX?=/usr/local
+export PREFIX
+LD_LIBRARY_PATH=$(PREFIX)/lib
 export LD_LIBRARY_PATH
 
 CFLAGS = -Wall -Og
@@ -27,7 +29,7 @@ tags: fake
 websocat:
 	git clone https://github.com/vi/websocat.git websc || git -C websc reset --hard
 	mkdir -p /usr/local/bin
-	cd websc && cargo install --path=. && install -v target/release/websocat /usr/local/bin
+	cd websc && cargo install --path=. && install -v target/release/websocat $(PREFIX)/bin
 
 nostril: $(HEADERS) $(OBJS)
 	$(CC) $(CFLAGS) $(OBJS) -lsecp256k1 -o $@
@@ -35,7 +37,7 @@ nostril: $(HEADERS) $(OBJS)
 .PHONY: secp256k1
 secp256k1:
 	git clone --depth 1 https://github.com/bitcoin-core/secp256k1.git || git -C secp256k1 reset --hard
-	cd secp256k1/ && ./autogen.sh && ./configure --prefix=/usr/local --with-gnu-ld --enable-module-extrakeys --enable-module-ecdh --enable-module-schnorrsig --enable-examples && make && make install
+	cd secp256k1/ && ./autogen.sh && ./configure --prefix=$(PREFIX) --with-gnu-ld --enable-module-extrakeys --enable-module-ecdh --enable-module-schnorrsig --enable-examples && make && make install
 	cd secp256k1 ./libtool  --finish $(PREFIX)/lib
 
 install: nostril
