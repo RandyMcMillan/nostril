@@ -40,12 +40,12 @@ secp256k1:
 	cd secp256k1/ && ./autogen.sh && ./configure --prefix=$(PREFIX) --with-gnu-ld --enable-module-extrakeys --enable-module-ecdh --enable-module-schnorrsig --enable-examples && make && make install
 	cd secp256k1 ./libtool  --finish $(PREFIX)/lib
 
-install: nostril
+install: nostril secp256k1
 	mkdir -p $(PREFIX)/bin
 	mkdir -p $(PREFIX)/lib
 	make install -C secp256k1 && install secp256k1/schnorr_example $(PREFIX)/bin/schnorr-key
-	cp nostril $(PREFIX)/bin
-	cp scripts/* $(PREFIX)/bin
+	install nostril $(PREFIX)/bin
+	install scripts/* $(PREFIX)/bin
 
 test:
 	nostril --pow 16 --envelope --sec 1a03a2b6ce40340f012043e6d9e717950076b757a708cb6e9ac3d2e3bbe5fb1a --tag nostril test --content test | websocat wss://relay.damus.io
