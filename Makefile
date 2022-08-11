@@ -48,6 +48,6 @@ install: nostril
 	cp scripts/* $(PREFIX)/bin
 
 test:
-	nostril --pow 16 --envelope --sec 1a03a2b6ce40340f012043e6d9e717950076b757a708cb6e9ac3d2e3bbe5fb1a --tag nostril test --content test | websocat wss://relay.damus.io
+	nostril --pow 16 --envelope --sec e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855 --tag nostril test --content "This is shasum -a 256 of 0" | websocat wss://relay.damus.io
 
 .PHONY: fake
