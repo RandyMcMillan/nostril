@@ -102,7 +102,7 @@ void usage()
     printf("\n");
     printf("  NIP-01: set_metadata");
     printf("\n");
-    printf("      nostril --sec <hex seckey> --envelope --kind 0 --content \"{\"name\": \"your_name\", \"about\": \"about_string\", \"picture\": \"https://<url_string>\"}");
+    printf("      nostril --sec <hex seckey> --envelope --kind 0 --content \"{\"name\": \"your_name\", \"about\": \"about_string\", \"picture\": \"https://<url_string>\"}\"");
     printf("\n");
     printf("\n");
     printf("  ADDITIONAL EXAMPLES\n");
@@ -120,6 +120,9 @@ void usage()
     printf("\n");
     printf("      nostril --sec $(echo $(cat nostr.privkey.txt.gpg | gpg -q --decrypt --textmode)) --envelope --kind 0 --content \"{\"name\": \"your_name\", \"about\": \"about_string\", \"picture\": \"https://<url_string>\"}");
     printf("\n");
+    printf("      nostril --sec e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855 --envelope --kind 0 --created-at 1231006505 --content \"{\"name\": \"0\", \"about\": \"0\", \"picture\": \"https://robohash.org/a34b99f22c790c4e36b2b3c2c35a36db06226e41c692fc82b8b56ac1c540c5bd\"}\" | jq -c | websocat wss://relay.damus.io");
+    printf("\n");
+
     exit(1);
 }
 
