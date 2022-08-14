@@ -7,6 +7,9 @@ CFLAGS = -Wall -Og
 OBJS = sha256.o nostril.o aes.o base64.o
 HEADERS = hex.h random.h config.h sha256.h
 
+NOSTRIL_BINARY=$(wildcard $(PREFIX)/bin/nostril)
+export NOSTRIL_BINARY
+
 -: all
 	bash -c "git submodule update --init"
 
@@ -43,6 +46,7 @@ secp256k1:
 install: nostril
 	mkdir -p $(PREFIX)/bin
 	mkdir -p $(PREFIX)/lib
+	rm -f $(PREFIX)/bin/nostril
 	make install -C secp256k1 && install secp256k1/schnorr_example $(PREFIX)/bin/schnorr-key
 	cp nostril $(PREFIX)/bin
 	cp scripts/* $(PREFIX)/bin
