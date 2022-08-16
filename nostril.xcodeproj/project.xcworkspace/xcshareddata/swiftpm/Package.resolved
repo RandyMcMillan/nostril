@@ -1,0 +1,14 @@
+{
+  "pins" : [
+    {
+      "identity" : "secp256k1.swift",
+      "kind" : "remoteSourceControl",
+      "location" : "git@github.com:vinux-app/secp256k1.swift.git",
+      "state" : {
+        "branch" : "main",
+        "revision" : "97cdd42b86156e72829a196349638a7397a680c2"
+      }
+    }
+  ],
+  "version" : 2
+}
