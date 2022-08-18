@@ -37,6 +37,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		4B192D9528ADAD07001A2A7A /* Products */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Products; path = "../../../git/Library/Developer/Xcode/DerivedData/nostril-ecruecumvoocqodrunapelwrjquc/Build/Products"; sourceTree = "<group>"; };
 		4B43874D28AC46EB006258C4 /* nostril */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = nostril; sourceTree = BUILT_PRODUCTS_DIR; };
 		4B43877E28AC4D2B006258C4 /* base64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = base64.h; sourceTree = "<group>"; };
 		4B43878128AC4D2B006258C4 /* compiler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = compiler.h; sourceTree = "<group>"; };
@@ -85,6 +86,7 @@
 				4B43878328AC4D2B006258C4 /* README.md */,
 				4B43879B28AC4D2C006258C4 /* sha256.c */,
 				4B43879C28AC4D2C006258C4 /* sha256.h */,
+				4B192D9528ADAD07001A2A7A /* Products */,
 				4B43874E28AC46EB006258C4 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -323,6 +325,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = M684FYCYG6;
 				ENABLE_HARDENED_RUNTIME = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = app.vinux.nostril;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -334,6 +337,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = M684FYCYG6;
 				ENABLE_HARDENED_RUNTIME = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = app.vinux.nostril;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
