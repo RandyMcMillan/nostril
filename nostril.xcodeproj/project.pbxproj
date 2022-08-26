@@ -24,6 +24,16 @@
 		4B4387BD28AC5179006258C4 /* nostril.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B43879928AC4D2C006258C4 /* nostril.c */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		4B47089E28B8ABE8001432F0 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4B43874528AC46EB006258C4 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 4B4387B928AC4FE5006258C4;
+			remoteInfo = configurator;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXCopyFilesBuildPhase section */
 		4B43874B28AC46EB006258C4 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
@@ -128,6 +138,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				4B47089F28B8ABE8001432F0 /* PBXTargetDependency */,
 			);
 			name = nostril;
 			packageProductDependencies = (
@@ -199,6 +210,14 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		4B47089F28B8ABE8001432F0 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 4B4387B928AC4FE5006258C4 /* configurator */;
+			targetProxy = 4B47089E28B8ABE8001432F0 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		4B43875228AC46EB006258C4 /* Debug */ = {
