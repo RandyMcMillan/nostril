@@ -7,6 +7,10 @@ ARS = libsecp256k1.a
 
 SUBMODULES = deps/secp256k1
 
+-: all
+init:
+	git submodule update --init --recursive
+
 all: nostril
 
 deps/secp256k1/.git:
@@ -29,6 +33,11 @@ deps/secp256k1/.libs/libsecp256k1.a: deps/secp256k1/config.log
 libsecp256k1.a: deps/secp256k1/.libs/libsecp256k1.a
 	cp $< $@
 
+websocat:
+	git clone https://github.com/vi/websocat.git websc || true
+	mkdir -p /usr/local/bin
+	cd websc && cargo install --path=. && install -v target/release/websocat /usr/local/bin
+
 %.o: %.c $(HEADERS)
 	@echo "cc $<"
 	@$(CC) $(CFLAGS) -c $< -o $@
@@ -49,6 +58,7 @@ configurator: configurator.c
 clean:
 	rm -f nostril *.o *.a
 	rm -rf deps/secp256k1
+	rm -rf websc
 
 tags: fake
 	ctags *.c *.h
