@@ -345,6 +345,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = dev.bitcoincore.nostril;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -360,6 +361,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = dev.bitcoincore.nostril;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
