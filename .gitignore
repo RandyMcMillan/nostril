@@ -9,3 +9,8 @@ configurator
 .buildcmd
 config.h
 tags
+.DS_Store
+deps/.DS_Store
+libsecp256k1.a
+nostril.xcodeproj/project.xcworkspace/xcuserdata/
+build
