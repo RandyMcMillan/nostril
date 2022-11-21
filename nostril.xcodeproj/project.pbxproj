@@ -194,7 +194,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/bash;
-			shellScript = "pushd deps/secp256k1 && ls && ./autogen.sh && ./configure && make install\n";
+			shellScript = "pushd deps/secp256k1 && ./autogen.sh && ./configure && make install\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
