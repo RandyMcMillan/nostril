@@ -6,23 +6,37 @@
 	objectVersion = 50;
 	objects = {
 
+/* Begin PBXAggregateTarget section */
+		4B073288292BE6CE00A9EF4B /* libsecp256k1 */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = 4B073289292BE6CE00A9EF4B /* Build configuration list for PBXAggregateTarget "libsecp256k1" */;
+			buildPhases = (
+				4B073292292BE6F600A9EF4B /* make-libsecp256k1.a */,
+			);
+			dependencies = (
+			);
+			name = libsecp256k1;
+			productName = libsecp256k1;
+		};
+/* End PBXAggregateTarget section */
+
 /* Begin PBXBuildFile section */
-		4B072DF2292B002100A9EF4B /* libsecp256k1.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B072DE3292AFF2100A9EF4B /* libsecp256k1.a */; };
-		4B073189292BD30500A9EF4B /* aes.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B072D9C292AF7C800A9EF4B /* aes.c */; };
-		4B07318A292BD30500A9EF4B /* aes.h in Sources */ = {isa = PBXBuildFile; fileRef = 4B072DA0292AF7C800A9EF4B /* aes.h */; };
-		4B07318B292BD30500A9EF4B /* base64.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B072D94292AF7C800A9EF4B /* base64.c */; };
-		4B07318C292BD30500A9EF4B /* base64.h in Sources */ = {isa = PBXBuildFile; fileRef = 4B072D9B292AF7C800A9EF4B /* base64.h */; };
-		4B07318D292BD30500A9EF4B /* compiler.h in Sources */ = {isa = PBXBuildFile; fileRef = 4B072D9E292AF7C800A9EF4B /* compiler.h */; };
-		4B07318E292BD30500A9EF4B /* config.h in Sources */ = {isa = PBXBuildFile; fileRef = 4B072D99292AF7C800A9EF4B /* config.h */; };
-		4B07318F292BD30500A9EF4B /* cursor.h in Sources */ = {isa = PBXBuildFile; fileRef = 4B072D95292AF7C800A9EF4B /* cursor.h */; };
-		4B073190292BD30500A9EF4B /* endian.h in Sources */ = {isa = PBXBuildFile; fileRef = 4B072D98292AF7C800A9EF4B /* endian.h */; };
-		4B073191292BD30500A9EF4B /* hex.h in Sources */ = {isa = PBXBuildFile; fileRef = 4B072D96292AF7C800A9EF4B /* hex.h */; };
-		4B073192292BD30500A9EF4B /* nostril.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B072D9A292AF7C800A9EF4B /* nostril.c */; };
-		4B073193292BD30500A9EF4B /* proof.h in Sources */ = {isa = PBXBuildFile; fileRef = 4B072D9D292AF7C800A9EF4B /* proof.h */; };
-		4B073194292BD30500A9EF4B /* random.h in Sources */ = {isa = PBXBuildFile; fileRef = 4B072D9F292AF7C800A9EF4B /* random.h */; };
-		4B073195292BD30500A9EF4B /* sha256.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B072DA1292AF7C800A9EF4B /* sha256.c */; };
-		4B073196292BD30500A9EF4B /* sha256.h in Sources */ = {isa = PBXBuildFile; fileRef = 4B072D93292AF7C800A9EF4B /* sha256.h */; };
+		4B073254292BE27100A9EF4B /* base64.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B073242292BE27000A9EF4B /* base64.c */; };
+		4B073255292BE27100A9EF4B /* nostril.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B073244292BE27000A9EF4B /* nostril.c */; };
+		4B073257292BE27100A9EF4B /* sha256.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B07324D292BE27100A9EF4B /* sha256.c */; };
+		4B073258292BE27100A9EF4B /* aes.c in Sources */ = {isa = PBXBuildFile; fileRef = 4B073250292BE27100A9EF4B /* aes.c */; };
+		4B07327C292BE60300A9EF4B /* libsecp256k1.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B07327B292BE60300A9EF4B /* libsecp256k1.a */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		4B07328E292BE6E100A9EF4B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4B072812292AEFB200A9EF4B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 4B073288292BE6CE00A9EF4B;
+			remoteInfo = libsecp256k1;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
 		4B072818292AEFB200A9EF4B /* CopyFiles */ = {
@@ -38,27 +52,27 @@
 
 /* Begin PBXFileReference section */
 		4B07281A292AEFB200A9EF4B /* nostril */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = nostril; sourceTree = BUILT_PRODUCTS_DIR; };
-		4B072D93292AF7C800A9EF4B /* sha256.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sha256.h; sourceTree = "<group>"; };
-		4B072D94292AF7C800A9EF4B /* base64.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = base64.c; sourceTree = "<group>"; };
-		4B072D95292AF7C800A9EF4B /* cursor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cursor.h; sourceTree = "<group>"; };
-		4B072D96292AF7C800A9EF4B /* hex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = hex.h; sourceTree = "<group>"; };
-		4B072D98292AF7C800A9EF4B /* endian.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = endian.h; sourceTree = "<group>"; };
-		4B072D99292AF7C800A9EF4B /* config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = config.h; sourceTree = "<group>"; };
-		4B072D9A292AF7C800A9EF4B /* nostril.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = nostril.c; sourceTree = "<group>"; };
-		4B072D9B292AF7C800A9EF4B /* base64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = base64.h; sourceTree = "<group>"; };
-		4B072D9C292AF7C800A9EF4B /* aes.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = aes.c; sourceTree = "<group>"; };
-		4B072D9D292AF7C800A9EF4B /* proof.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = proof.h; sourceTree = "<group>"; };
-		4B072D9E292AF7C800A9EF4B /* compiler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = compiler.h; sourceTree = "<group>"; };
-		4B072D9F292AF7C800A9EF4B /* random.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = random.h; sourceTree = "<group>"; };
-		4B072DA0292AF7C800A9EF4B /* aes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = aes.h; sourceTree = "<group>"; };
-		4B072DA1292AF7C800A9EF4B /* sha256.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = sha256.c; sourceTree = "<group>"; };
-		4B072DE3292AFF2100A9EF4B /* libsecp256k1.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libsecp256k1.a; sourceTree = "<group>"; };
-		4B072DEA292AFFAF00A9EF4B /* secp256k1_ecdh.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = secp256k1_ecdh.h; sourceTree = "<group>"; };
-		4B072DEB292AFFAF00A9EF4B /* secp256k1_schnorrsig.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = secp256k1_schnorrsig.h; sourceTree = "<group>"; };
-		4B072DEC292AFFAF00A9EF4B /* secp256k1_recovery.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = secp256k1_recovery.h; sourceTree = "<group>"; };
-		4B072DED292AFFAF00A9EF4B /* secp256k1_extrakeys.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = secp256k1_extrakeys.h; sourceTree = "<group>"; };
-		4B072DEE292AFFAF00A9EF4B /* secp256k1_preallocated.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = secp256k1_preallocated.h; sourceTree = "<group>"; };
-		4B072DEF292AFFAF00A9EF4B /* secp256k1.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = secp256k1.h; sourceTree = "<group>"; };
+		4B07323F292BE27000A9EF4B /* cursor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cursor.h; sourceTree = "<group>"; };
+		4B073240292BE27000A9EF4B /* config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = config.h; sourceTree = "<group>"; };
+		4B073241292BE27000A9EF4B /* proof.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = proof.h; sourceTree = "<group>"; };
+		4B073242292BE27000A9EF4B /* base64.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = base64.c; sourceTree = "<group>"; };
+		4B073243292BE27000A9EF4B /* aes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = aes.h; sourceTree = "<group>"; };
+		4B073244292BE27000A9EF4B /* nostril.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = nostril.c; sourceTree = "<group>"; };
+		4B073245292BE27000A9EF4B /* secp256k1_extrakeys.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = secp256k1_extrakeys.h; sourceTree = "<group>"; };
+		4B073246292BE27000A9EF4B /* random.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = random.h; sourceTree = "<group>"; };
+		4B073247292BE27000A9EF4B /* secp256k1_recovery.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = secp256k1_recovery.h; sourceTree = "<group>"; };
+		4B073248292BE27000A9EF4B /* secp256k1_schnorrsig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = secp256k1_schnorrsig.h; sourceTree = "<group>"; };
+		4B073249292BE27000A9EF4B /* endian.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = endian.h; sourceTree = "<group>"; };
+		4B07324A292BE27000A9EF4B /* compiler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = compiler.h; sourceTree = "<group>"; };
+		4B07324B292BE27000A9EF4B /* secp256k1_ecdh.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = secp256k1_ecdh.h; sourceTree = "<group>"; };
+		4B07324D292BE27100A9EF4B /* sha256.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = sha256.c; sourceTree = "<group>"; };
+		4B07324E292BE27100A9EF4B /* base64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = base64.h; sourceTree = "<group>"; };
+		4B07324F292BE27100A9EF4B /* hex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = hex.h; sourceTree = "<group>"; };
+		4B073250292BE27100A9EF4B /* aes.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = aes.c; sourceTree = "<group>"; };
+		4B073251292BE27100A9EF4B /* secp256k1_preallocated.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = secp256k1_preallocated.h; sourceTree = "<group>"; };
+		4B073252292BE27100A9EF4B /* sha256.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sha256.h; sourceTree = "<group>"; };
+		4B073253292BE27100A9EF4B /* secp256k1.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = secp256k1.h; sourceTree = "<group>"; };
+		4B07327B292BE60300A9EF4B /* libsecp256k1.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libsecp256k1.a; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -66,7 +80,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4B072DF2292B002100A9EF4B /* libsecp256k1.a in Frameworks */,
+				4B07327C292BE60300A9EF4B /* libsecp256k1.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -76,20 +90,20 @@
 		4B072811292AEFB200A9EF4B = {
 			isa = PBXGroup;
 			children = (
-				4B072D9C292AF7C800A9EF4B /* aes.c */,
-				4B072DA0292AF7C800A9EF4B /* aes.h */,
-				4B072D94292AF7C800A9EF4B /* base64.c */,
-				4B072D9B292AF7C800A9EF4B /* base64.h */,
-				4B072D9E292AF7C800A9EF4B /* compiler.h */,
-				4B072D99292AF7C800A9EF4B /* config.h */,
-				4B072D95292AF7C800A9EF4B /* cursor.h */,
-				4B072D98292AF7C800A9EF4B /* endian.h */,
-				4B072D96292AF7C800A9EF4B /* hex.h */,
-				4B072D9A292AF7C800A9EF4B /* nostril.c */,
-				4B072D9D292AF7C800A9EF4B /* proof.h */,
-				4B072D9F292AF7C800A9EF4B /* random.h */,
-				4B072DA1292AF7C800A9EF4B /* sha256.c */,
-				4B072D93292AF7C800A9EF4B /* sha256.h */,
+				4B073250292BE27100A9EF4B /* aes.c */,
+				4B073243292BE27000A9EF4B /* aes.h */,
+				4B073242292BE27000A9EF4B /* base64.c */,
+				4B07324E292BE27100A9EF4B /* base64.h */,
+				4B07324A292BE27000A9EF4B /* compiler.h */,
+				4B073240292BE27000A9EF4B /* config.h */,
+				4B07323F292BE27000A9EF4B /* cursor.h */,
+				4B073249292BE27000A9EF4B /* endian.h */,
+				4B07324F292BE27100A9EF4B /* hex.h */,
+				4B073244292BE27000A9EF4B /* nostril.c */,
+				4B073241292BE27000A9EF4B /* proof.h */,
+				4B073246292BE27000A9EF4B /* random.h */,
+				4B07324D292BE27100A9EF4B /* sha256.c */,
+				4B073252292BE27100A9EF4B /* sha256.h */,
 				4B07281B292AEFB200A9EF4B /* Products */,
 				4B072A04292AF2CA00A9EF4B /* Frameworks */,
 			);
@@ -106,34 +120,36 @@
 		4B072A04292AF2CA00A9EF4B /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				4B072DE9292AFFAF00A9EF4B /* include */,
-				4B072DE3292AFF2100A9EF4B /* libsecp256k1.a */,
+				4B07327B292BE60300A9EF4B /* libsecp256k1.a */,
+				4B07324B292BE27000A9EF4B /* secp256k1_ecdh.h */,
+				4B073245292BE27000A9EF4B /* secp256k1_extrakeys.h */,
+				4B073251292BE27100A9EF4B /* secp256k1_preallocated.h */,
+				4B073247292BE27000A9EF4B /* secp256k1_recovery.h */,
+				4B073248292BE27000A9EF4B /* secp256k1_schnorrsig.h */,
+				4B073253292BE27100A9EF4B /* secp256k1.h */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		4B072DE9292AFFAF00A9EF4B /* include */ = {
-			isa = PBXGroup;
-			children = (
-				4B072DEA292AFFAF00A9EF4B /* secp256k1_ecdh.h */,
-				4B072DEB292AFFAF00A9EF4B /* secp256k1_schnorrsig.h */,
-				4B072DEC292AFFAF00A9EF4B /* secp256k1_recovery.h */,
-				4B072DED292AFFAF00A9EF4B /* secp256k1_extrakeys.h */,
-				4B072DEE292AFFAF00A9EF4B /* secp256k1_preallocated.h */,
-				4B072DEF292AFFAF00A9EF4B /* secp256k1.h */,
-			);
-			name = include;
-			path = deps/secp256k1/include;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		4B07326B292BE54F00A9EF4B /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
 		4B072819292AEFB200A9EF4B /* nostril */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 4B072821292AEFB200A9EF4B /* Build configuration list for PBXNativeTarget "nostril" */;
 			buildPhases = (
-				4B072A2A292AF4B100A9EF4B /* ShellScript */,
+				4B07326B292BE54F00A9EF4B /* Headers */,
+				4B072A2A292AF4B100A9EF4B /* build deps/secp256k1 */,
 				4B072816292AEFB200A9EF4B /* Sources */,
 				4B072817292AEFB200A9EF4B /* Frameworks */,
 				4B072818292AEFB200A9EF4B /* CopyFiles */,
@@ -141,6 +157,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				4B07328F292BE6E100A9EF4B /* PBXTargetDependency */,
 			);
 			name = nostril;
 			productName = xcode;
@@ -156,6 +173,9 @@
 				LastUpgradeCheck = 1230;
 				TargetAttributes = {
 					4B072819292AEFB200A9EF4B = {
+						CreatedOnToolsVersion = 12.3;
+					};
+					4B073288292BE6CE00A9EF4B = {
 						CreatedOnToolsVersion = 12.3;
 					};
 				};
@@ -174,12 +194,13 @@
 			projectRoot = "";
 			targets = (
 				4B072819292AEFB200A9EF4B /* nostril */,
+				4B073288292BE6CE00A9EF4B /* libsecp256k1 */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		4B072A2A292AF4B100A9EF4B /* ShellScript */ = {
+		4B072A2A292AF4B100A9EF4B /* build deps/secp256k1 */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -188,13 +209,32 @@
 			);
 			inputPaths = (
 			);
+			name = "build deps/secp256k1";
 			outputFileListPaths = (
 			);
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/bash;
-			shellScript = "pushd deps/secp256k1 && ./autogen.sh && ./configure && make install\n";
+			shellScript = "make clean && make libsecp256k1.a\n";
+		};
+		4B073292292BE6F600A9EF4B /* make-libsecp256k1.a */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "make-libsecp256k1.a";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/bash;
+			shellScript = "make clean && make libsecp256k1.a\n\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -203,24 +243,22 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4B073189292BD30500A9EF4B /* aes.c in Sources */,
-				4B07318A292BD30500A9EF4B /* aes.h in Sources */,
-				4B07318B292BD30500A9EF4B /* base64.c in Sources */,
-				4B07318C292BD30500A9EF4B /* base64.h in Sources */,
-				4B07318D292BD30500A9EF4B /* compiler.h in Sources */,
-				4B07318E292BD30500A9EF4B /* config.h in Sources */,
-				4B07318F292BD30500A9EF4B /* cursor.h in Sources */,
-				4B073190292BD30500A9EF4B /* endian.h in Sources */,
-				4B073191292BD30500A9EF4B /* hex.h in Sources */,
-				4B073192292BD30500A9EF4B /* nostril.c in Sources */,
-				4B073193292BD30500A9EF4B /* proof.h in Sources */,
-				4B073194292BD30500A9EF4B /* random.h in Sources */,
-				4B073195292BD30500A9EF4B /* sha256.c in Sources */,
-				4B073196292BD30500A9EF4B /* sha256.h in Sources */,
+				4B073254292BE27100A9EF4B /* base64.c in Sources */,
+				4B073257292BE27100A9EF4B /* sha256.c in Sources */,
+				4B073258292BE27100A9EF4B /* aes.c in Sources */,
+				4B073255292BE27100A9EF4B /* nostril.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		4B07328F292BE6E100A9EF4B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 4B073288292BE6CE00A9EF4B /* libsecp256k1 */;
+			targetProxy = 4B07328E292BE6E100A9EF4B /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		4B07281F292AEFB200A9EF4B /* Debug */ = {
@@ -338,7 +376,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_ASSET_PATHS = libsecp256k1.a;
+				DEVELOPMENT_ASSET_PATHS = "";
 				DEVELOPMENT_TEAM = M684FYCYG6;
 				ENABLE_HARDENED_RUNTIME = YES;
 				LIBRARY_SEARCH_PATHS = (
@@ -354,7 +392,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_ASSET_PATHS = libsecp256k1.a;
+				DEVELOPMENT_ASSET_PATHS = "";
 				DEVELOPMENT_TEAM = M684FYCYG6;
 				ENABLE_HARDENED_RUNTIME = YES;
 				LIBRARY_SEARCH_PATHS = (
@@ -362,6 +400,24 @@
 					"$(PROJECT_DIR)",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = dev.bitcoincore.nostril;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		4B07328A292BE6CE00A9EF4B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = M684FYCYG6;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		4B07328B292BE6CE00A9EF4B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = M684FYCYG6;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
@@ -383,6 +439,15 @@
 			buildConfigurations = (
 				4B072822292AEFB200A9EF4B /* Debug */,
 				4B072823292AEFB200A9EF4B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		4B073289292BE6CE00A9EF4B /* Build configuration list for PBXAggregateTarget "libsecp256k1" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4B07328A292BE6CE00A9EF4B /* Debug */,
+				4B07328B292BE6CE00A9EF4B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
