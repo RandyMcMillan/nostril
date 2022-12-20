@@ -1,4 +1,4 @@
-name: C/C++ CI
+name: nostril
 
 on:
   push:
@@ -9,11 +9,17 @@ on:
 jobs:
   build:
 
-    runs-on: ubuntu-latest
+    runs-on: [ubuntu-20.04, ubuntu-22.04, ubuntu-latest]
 
     steps:
     - uses: actions/checkout@v3
-    - name: make 
+    - name: sudo make install
       run: |
         make
         sudo make install
+    - name: man nostril
+      run: |
+        man nostril
+    - name: nostril
+      run: |
+        nostril
