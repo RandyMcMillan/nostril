@@ -26,6 +26,7 @@ jobs:
           brew install libtool autoconf automake 
           printenv
           make
+          mv nostril nostril-$ImageOS-$RUNNER_ARCH
       - name: Save state
         run: echo "{name}={value}" >> $GITHUB_STATE
       - name: Set output
@@ -35,6 +36,6 @@ jobs:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
           automatic_release_tag: ${{ matrix.os }}
           prerelease: true
-          title: "Development Build"
+          title: "Development Build" $ImageOS-$RUNNER_ARCH
           files: |
-            nostril
+          nostril-$ImageOS-$RUNNER_ARCH
