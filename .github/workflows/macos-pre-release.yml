@@ -26,6 +26,7 @@ jobs:
           brew install libtool autoconf automake 
           printenv
           make
+          mv nostril nostril-${{ matrix.os }}
       - name: Save state
         run: echo "{name}={value}" >> $GITHUB_STATE
       - name: Set output
@@ -37,4 +38,4 @@ jobs:
           prerelease: true
           title: "Development Build"
           files: |
-            nostril
+          nostril-*
