@@ -24,6 +24,7 @@ jobs:
       - name: "build pre-release"
         run: |
           make
+          shasum -a 256 nostril > nostril.sha256.txt
       - name: Save state
         run: echo "{name}={value}" >> $GITHUB_STATE
       - name: Set output
@@ -36,3 +37,4 @@ jobs:
           title: "Development Build"
           files: |
             nostril
+            nostril.sha256.txt
