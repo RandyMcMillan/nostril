@@ -5,7 +5,7 @@ on:
   push:
     branches:
       - 'master'
-      - '**-ubuntu-pre-release'
+      - '**-pre-release'
 
   workflow_dispatch:
 
