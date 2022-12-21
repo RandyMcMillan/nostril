@@ -5,7 +5,7 @@ on:
   push:
     branches:
       - 'master'
-      - '**-macos-pre-release'
+      - '**-pre-release'
 
   workflow_dispatch:
 
@@ -23,6 +23,8 @@ jobs:
       - uses: actions/checkout@v2
       - name: "build pre-release"
         run: |
+          brew install libtool autoconf automake 
+          printenv
           make
       - name: Save state
         run: echo "{name}={value}" >> $GITHUB_STATE
