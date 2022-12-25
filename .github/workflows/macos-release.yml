@@ -16,11 +16,17 @@ jobs:
         os: [macos-11, macos-12, macos-latest]
     runs-on: ${{ matrix.os }}
     steps:
+      - name: Import GPG Key
+      - uses: crazy-max/ghaction-import-gpg@v1
+        env:
+        # https://docs.github.com/en/actions/security-guides/encrypted-secrets#creating-encrypted-secrets-for-a-repository
+        GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
+        PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
       - uses: styfle/cancel-workflow-action@0.9.1
         with:
           access_token: ${{ github.token }}
       - uses: actions/checkout@v2
-      - name: "build pre-release"
+      - name: "build release"
         run: |
           brew install libtool autoconf automake
           printenv
