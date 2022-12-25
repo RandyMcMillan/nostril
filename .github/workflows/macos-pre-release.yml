@@ -21,12 +21,13 @@ jobs:
         with:
           access_token: ${{ github.token }}
       - uses: actions/checkout@v2
-      - name: "build pre-release"
+      - name: "build pre-release $(echo uname -m)"
         run: |
           brew install libtool autoconf automake
           printenv
           make
-          shasum -a 256 nostril > nostril.sha256.txt
+          cp nostril nostril-$(echo uname -m)
+          shasum -a 256 nostril-$(uname -m) > nostril-$(echo uname -m).sha256.txt
       - name: Save state
         run: echo "{name}={value}" >> $GITHUB_STATE
       - name: Set output
@@ -36,7 +37,7 @@ jobs:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
           automatic_release_tag: ${{ matrix.os }}
           prerelease: true
-          title: "Development Build"
+          title: "Development Build $(echo uname -m)"
           files: |
-            nostril
-            nostril.sha256.txt
+            nostril-$(echo uname -m)
+            nostril-$(uname -m).sha256.txt
