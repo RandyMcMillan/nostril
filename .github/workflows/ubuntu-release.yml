@@ -5,7 +5,8 @@ on:
   push:
     branches:
       - 'master'
-      - '**release**'
+      - '!**pre-release**'
+      - '-release**'
 
   workflow_dispatch:
 
