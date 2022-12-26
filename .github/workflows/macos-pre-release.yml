@@ -28,7 +28,7 @@ jobs:
           UNAME_M=$(echo uname -m)
           export UNAME_M
           echo $UNAME_M
-      - name: "Build pre-release" ${{ matrix.os }}-$(echo uname -m)
+      - name: "Build pre-release"
         run: |
           make
           cp nostril nostril-$UNAME_M
@@ -40,9 +40,9 @@ jobs:
       - uses: "marvinpinto/action-automatic-releases@latest"
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          automatic_release_tag: ${{ matrix.os }}-$(echo uname -m)
+          automatic_release_tag: ${{ matrix.os }}-$UNAME_M
           prerelease: true
-          title: "Development Build" ${{ matrix.os }}-$(echo uname -m)
+          title: "Development Build"
           files: |
             nostril-$UNAME_M
             nostril-$UNAME_M.sha256.txt
