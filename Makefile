@@ -18,8 +18,10 @@ help:## 	print verbose help
 	@echo ""
 	@echo "Useful Commands:"
 	@echo ""
-
-all: nostril docs## 	nostril docs
+submodules:clean## 	submodules
+	@git submodule update --init --recursive
+#	@git submodule foreach --recursive "git submodule update --init --recursive"
+all: nostril docs submodules## 	nostril docs submodules
 
 docs: doc/nostril.1
 
@@ -76,6 +78,7 @@ config.h: configurator
 	./configurator > $@
 
 configurator: configurator.c
+	rm configurator
 	$(CC) $< -o $@
 
 clean:
