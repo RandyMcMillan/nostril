@@ -37,8 +37,9 @@ jobs:
       - name: make
         run: |
           make clean #| echo "${PIPESTATUS[0]}"
+          #make submodules #| echo "${PIPESTATUS[0]}"
           #git submodule update --init | echo "${PIPESTATUS[0]}"
-          make all #| echo "${PIPESTATUS[0]}"
+          #make all #| echo "${PIPESTATUS[0]}"
           make install #| echo "${PIPESTATUS[0]}"
       - name: man nostril
         run: |
