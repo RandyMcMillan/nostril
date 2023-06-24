@@ -88,14 +88,15 @@ libjq.a: deps/jq/.libs/libjq.a## libjq.a
 	cp $< $@
 
 ## nostcat
+.PHONY:deps/nostcat/.git deps/nostcat
 deps/nostcat/.git:## 	
 	@devtools/refresh-submodules.sh $(SUBMODULES)
-deps/nostcat:## 	
+deps/nostcat:deps/nostcat/.git## 	
 	cd deps/nostcat; \
 	make cargo-install
-deps/nostcat/target/release/nostcat:## 	
-	cp nostcat< $@
-nostcat:deps/nostcat/.git deps/nostcat/target/release/nostcat## 	nostcat
+deps/nostcat/target/release/nostcat:deps/nostcat## 	
+	cp $@ nostcat
+nostcat:deps/nostcat/target/release/nostcat## 	nostcat
 
 %.o: %.c $(HEADERS)
 	@echo "cc $<"

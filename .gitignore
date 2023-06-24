@@ -30,3 +30,5 @@ deps/build/
 
 libgit.a
 libjq.a
+
+nostcat
