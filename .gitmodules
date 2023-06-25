@@ -5,7 +5,7 @@
 	ignore = dirty
 [submodule "deps/nostcat"]
 	path = deps/nostcat
-    url = git@github.com:RandyMcMillan/nostcat.git
+    url = git@github.com:gnostr-org/nostcat.git
 	ignore = dirty
 [submodule "deps/git"]
 	path = deps/git
