@@ -123,8 +123,8 @@ tcl-unix:libtclstub.a## 	deps/tcl/unix/libtclstub.a
 deps/nostcat/.git:
 	@devtools/refresh-submodules.sh $(SUBMODULES)
 deps/nostcat:deps/nostcat/.git
-	cd deps/nostcat; \
-	make cargo-install
+	cd deps/nostcat && \
+		make cargo-install
 deps/nostcat/target/release/nostcat:deps/nostcat
 	cp $@ nostcat
 .PHONY:deps/nostcat
