@@ -61,6 +61,7 @@ dist: docs version## 	create tar distribution
 		--sign --armor --detach-sig --output SHA256SUMS.txt.asc SHA256SUMS.txt
 	##rsync -avzP dist/ charon:/www/cdn.jb55.com/tarballs/nostril/
 
+.PHONY:submodules
 submodules:deps/secp256k1/.git deps/jq/.git deps/git/.git deps/nostcat/.git deps/tcl/.git## 	refresh-submodules
 
 deps/secp256k1/.git:
