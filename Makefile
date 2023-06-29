@@ -63,15 +63,16 @@ submodules:deps/secp256k1/.git deps/jq/.git deps/git/.git deps/nostcat/.git deps
 deps/secp256k1/.git:
 deps/secp256k1/include/secp256k1.h: deps/secp256k1/.git
 deps/secp256k1/configure: deps/secp256k1/include/secp256k1.h
-	cd deps/secp256k1; \
-	./autogen.sh
+	cd deps/secp256k1 && \
+		./autogen.sh
 deps/secp256k1/config.log: deps/secp256k1/configure
 .PHONY:deps/secp256k1/config.log
-	cd deps/secp256k1; \
-	./configure --disable-shared --enable-module-ecdh --enable-module-schnorrsig --enable-module-extrakeys
+	cd deps/secp256k1 && \
+		./configure --enable-module-ecdh --enable-module-schnorrsig --enable-module-extrakeys
 deps/secp256k1/.libs/libsecp256k1.a: deps/secp256k1/config.log
-	cd deps/secp256k1; \
-	make -j libsecp256k1.la
+	cd deps/secp256k1 && \
+		make -j && make install #libsecp256k1.a
+.PHONY:libsecp256k1.a
 libsecp256k1.a: deps/secp256k1/.libs/libsecp256k1.a## libsecp256k1.a
 	cp $< $@
 ##libsecp256k1.a
