@@ -98,8 +98,8 @@ libjq.a: deps/jq/.libs/libjq.a## 	libjq.a
 deps/git/.git:
 	@devtools/refresh-submodules.sh $(SUBMODULES)
 deps/git/libgit.a:deps/git/.git
-	cd deps/git; \
-	make install
+	cd deps/git && \
+		make install
 ##libgit.a
 ##	deps/git/libgit.a deps/git/.git
 ##	cd deps/git; \
