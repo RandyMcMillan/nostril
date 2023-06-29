@@ -88,8 +88,8 @@ deps/jq/.git:
 	@devtools/refresh-submodules.sh $(SUBMODULES)
 .PHONY:deps/jq/.libs/libjq.a
 deps/jq/.libs/libjq.a:deps/jq/.git
-	cd deps/jq; \
-	autoreconf -fi && ./configure  --disable-maintainer-mode &&  make install
+	cd deps/jq && \
+		autoreconf -fi && ./configure  --disable-maintainer-mode &&  make install
 ##libjq.a
 ##	cp $< deps/jq/libjq.a .
 libjq.a: deps/jq/.libs/libjq.a## 	libjq.a
