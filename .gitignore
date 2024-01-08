@@ -33,3 +33,10 @@ libtclstub.a
 libsecp256k1.a
 
 nostcat
+
+
+# Added by cargo
+#
+# already existing elements were commented out
+
+#/target
