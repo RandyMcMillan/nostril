@@ -22,11 +22,11 @@ TAR                                    :=$(shell which tar)
 export TAR
 
 ##all:
-all: nostril docs## 	make nostril docs
+all: nostril doc/nostril.1## 	make nostril docs
 
 ##docs:
 ##	doc/nostril.1 docker-start
-docs: doc/nostril.1 docker-start## 	docs: convert README to doc/nostr.1
+docs: doc/nostril.1## 	docs: convert README to doc/nostr.1
 #@echo docs
 	@bash -c 'if pgrep MacDown; then pkill MacDown; fi; 2>/dev/null'
 	@bash -c 'cat $(PWD)/sources/HEADER.md                >  $(PWD)/README.md 2>/dev/null'
@@ -41,8 +41,11 @@ docs: doc/nostril.1 docker-start## 	docs: convert README to doc/nostr.1
 	@git add --ignore-errors *.md 2>/dev/null
 #@git ls-files -co --exclude-standard | grep '\.md/$\' | xargs git
 
-doc/nostril.1: README##
-	scdoc < $^ > $@
+.PHONY:doc doc/nostril.1
+doc:doc/nostril.1
+doc/nostril.1:
+	help2man ./nostril > doc/nostril.1
+	#scdoc < $^ > $@
 
 .PHONY: version
 version: nostril.c## 	print version
