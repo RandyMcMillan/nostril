@@ -39,15 +39,13 @@ dist: docs version
 	cp CHANGELOG dist/CHANGELOG.txt
 	rsync -avzP dist/ charon:/www/cdn.jb55.com/tarballs/nostril/
 
-deps/secp256k1/.git:
-	@devtools/refresh-submodules.sh $(SUBMODULES)
+deps/secp256k1/include/secp256k1.h:
+	cd deps && ln -s ../ext/secp256k1 .
 
-deps/secp256k1/include/secp256k1.h: deps/secp256k1/.git
-
-deps/secp256k1/configure: deps/secp256k1/.git
+deps/secp256k1/configure: deps/secp256k1/include/secp256k1.h
 	cd deps/secp256k1; \
 	automake --add-missing; \
-	autoreconf; \
+	autoconf; \
 	./autogen.sh
 
 deps/secp256k1/config.log: deps/secp256k1/configure
@@ -58,6 +56,7 @@ deps/secp256k1/.libs/libsecp256k1.a: deps/secp256k1/config.log
 	cd deps/secp256k1; \
 	make -j libsecp256k1.la
 
+.PHONY:libsecp256k1.a
 libsecp256k1.a: deps/secp256k1/.libs/libsecp256k1.a
 	cp $< $@
 
