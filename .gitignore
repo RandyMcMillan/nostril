@@ -24,3 +24,12 @@ scripts/subnote
 
 .DS_Store
 deps/.DS_Store
+
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+
+ext/secp256k1/INSTALL
+ext/secp256k1/CTestTestfile.cmake
+ext/secp256k1/DartConfiguration.tcl
+ext/secp256k1/src/CTestTestfile.cmake
