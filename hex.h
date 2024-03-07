@@ -1,4 +1,5 @@
-
+#include <stdio.h>
+#include <stdlib.h>
 static inline int char_to_hex(unsigned char *val, char c)
 {
 	if (c >= '0' && c <= '9') {
