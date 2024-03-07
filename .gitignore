@@ -33,3 +33,10 @@ ext/secp256k1/INSTALL
 ext/secp256k1/CTestTestfile.cmake
 ext/secp256k1/DartConfiguration.tcl
 ext/secp256k1/src/CTestTestfile.cmake
+
+
+# Added by cargo
+#
+# already existing elements were commented out
+
+#/target
