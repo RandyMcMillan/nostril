@@ -530,7 +530,11 @@ static int parse_args(int argc, const char *argv[], struct args *args, struct no
 		if (!strcmp(arg, "--sec") || !strcmp(arg, "-s")) {
 			args->sec = *argv++; argc--;
 			if (args->sec){
-				printf("%s",args->sec);
+
+
+//				printf("%s",args->sec);
+
+
 			}
 		} else if (!strcmp(arg, "--created-at")) {
 			arg = *argv++; argc--;
