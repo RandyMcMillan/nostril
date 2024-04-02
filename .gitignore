@@ -1,3 +1,5 @@
+install_manifest.txt
+
 *.o
 /.direnv/
 .privenv
