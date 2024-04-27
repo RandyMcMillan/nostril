@@ -7,15 +7,3 @@ $ make
 # Optional - install to system PATH
 
 $ sudo make install
-
-######################
-
-Ubuntu
-------
-
-$ sudo apt install libtool make automake
-$ make
-
-# Optional - install to system PATH
-
-$ sudo make install
