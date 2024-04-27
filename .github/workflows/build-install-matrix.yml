@@ -1,7 +1,9 @@
-name: ubuntu-matrix
+name: build/install-matrix
 
 # Controls when the action will run.
 on:
+  schedule:
+  - cron: '0 2 * * *' # run at 2 AM UTC¬
   pull_request:
     branches:
       - '*'
@@ -21,10 +23,10 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  ubuntu-build_and_test:
+  build_and_install:
     strategy:
       matrix:
-        os: [ubuntu-20.04, ubuntu-latest]
+        os: [macos-latest, ubuntu-latest]
     runs-on: ${{ matrix.os }}
     steps:
       - uses: styfle/cancel-workflow-action@0.11.0
@@ -36,24 +38,27 @@ jobs:
           fetch-depth: '0'
           submodules: 'recursive'
           set-safe-directory: 'true'
-      - name: printenv && sudo apt update && sudo apt install scdoc -y
+      - name: printenv && brew install scdoc autoconf automake rustup-init libtool || sudo apt update && sudo apt install rustup-init scdoc -y
         run: |
-          printenv && sudo apt update && sudo apt install scdoc -y
+          printenv && brew install scdoc autoconf automake rustup-init libtool || sudo apt update && sudo apt install rustup-init scdoc -y || true
+      - name: cargo install gnostr-bins gnostr-xq
+        run: |
+          cargo install gnostr-bins gnostr-xq
       - name: rm -rf deps
         run: |
           rm -rf deps
       - name: make
         run: |
-          mkdir -p /usr/local/share/man/man1/nostril.1
+          sudo mkdir -p /usr/local/share/man/man1 || true
           make
       - name: sudo make install
         run: |
           sudo make install
       - name: man nostril
         run: |
-          man nostril
+          sudo man nostril
       - name: sudo ./nostril
         run: |
           #pipe handles non-zero return from nostril default help
           file nostril
-          sudo ./nostril >/dev/null | echo "${PIPESTATUS[0]}"
+          ID=$(EVENT=$(nostril --sec $(gnostr-sha256 $(git rev-parse HEAD)) --content "gnostr-chat:topic:$(git rev-parse HEAD)" --tag gnostr-chat $(git rev-parse HEAD)) && echo $EVENT | gnostr-post-event >/dev/null; echo $EVENT | gnostr-xq .id); gnostr-fetch-by-id wss://nos.lol $(echo ${ID//\"})
