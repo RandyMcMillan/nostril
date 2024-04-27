@@ -12,7 +12,7 @@ PREFIX                                 ?= /usr/local
 export PREFIX
 ARS                                     = libsecp256k1.a libgit.a libjq.a libtclstub.a
 
-SUBMODULES                              = deps/secp256k1 deps/git deps/nostcat deps/hyper-nostr deps/tcl
+SUBMODULES                              = deps/git deps/nostcat deps/hyper-nostr deps/tcl deps/jq
 
 VERSION                                :=$(shell cat version)
 export VERSION
@@ -76,8 +76,7 @@ dist: docs version## 	create tar distribution
 		--sign --armor --detach-sig --output SHA256SUMS.txt.asc SHA256SUMS.txt
 	##rsync -avzP dist/ charon:/www/cdn.jb55.com/tarballs/nostril/
 
-.PHONY:submodules
-submodules:deps/secp256k1/.git deps/jq/.git deps/git/.git deps/nostcat/.git deps/tcl/.git## 	refresh-submodules
+submodules:deps/jq/.git deps/git/.git deps/nostcat/.git deps/tcl/.git## 	refresh-submodules
 
 .ONESHELL:
 deps/secp256k1/.git:
@@ -101,13 +100,9 @@ libsecp256k1.a: deps/secp256k1/.libs/libsecp256k1.a## libsecp256k1.a
 ##	deps/secp256k1/./configure
 
 
-deps/jq/modules/oniguruma.git:
-	@devtools/refresh-submodules.sh $(SUBMODULES)
-	cd deps/jq/modules/oniguruma && ./autogen.sh && ./configure && make && make install
 deps/jq/.git:
-	@devtools/refresh-submodules.sh $(SUBMODULES)
-#.PHONY:deps/jq/.libs/libjq.a
-deps/jq/.libs/libjq.a:deps/jq/.git deps/jq/modules/oniguruma.git
+	@devtools/refresh-submodules.sh deps/jq
+deps/jq/.libs/libjq.a:deps/jq/.git
 	cd deps/jq && \
 		autoreconf -fi && ./configure --disable-maintainer-mode && make
 ##libjq.a
