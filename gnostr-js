@@ -1,0 +1,59 @@
+#!/usr/bin/env node
+'use strict';
+
+if (!gnostr) {
+        var gnostr = {};
+}
+
+gnostr.namespace = function () {
+    var a = arguments,
+        o = null,
+        i, j, d;
+    for (i = 0; i < a.length; i = i + 1) {
+        d = ("" + a[i]).split(".");
+        o = gnostr;
+        for (j = (d[0] == "gnostr") ? 1 : 0; j < d.length; j = j + 1) {
+            o[d[j]] = o[d[j]] || {};
+            o = o[d[j]];
+        }
+    }
+    return o;
+}
+
+gnostr.namespace("gnostr.UI.Controls")
+
+gnostr.UI.Controls.Gnostr = function(){};
+gnostr.UI.Controls.Gnostr.prototype.argparse = function(){
+
+//test();
+
+const version = 'v0.0.1'
+const { ArgumentParser } = require('argparse');
+//const { version } = require('./package.json');
+
+const parser = new ArgumentParser({
+  description: 'gnostr'
+});
+
+parser.add_argument('-v', '--version', { action: 'version', version });
+parser.add_argument('-f', '--foo', { help: 'foo bar' });
+parser.add_argument('-b', '--bar', { help: 'bar foo' });
+parser.add_argument('--baz', { help: 'baz bar' });
+
+//console.log(parser.parse_args());
+//console.dir(parser.parse_args());
+
+};
+gnostr.UI.Controls.Gnostr.prototype.argparse();
+
+const { spawn } = require("node:child_process");
+
+const commandProcess = spawn(
+  "nostril",
+  ["--sec", "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"],
+  {
+    stdio: "inherit"
+  }
+);
+
+
