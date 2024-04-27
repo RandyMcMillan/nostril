@@ -20,6 +20,20 @@ nostril.namespace = function () {
     return o;
 }
 
+
+
+
+for (let i = 0; i < process.argv.length; ++i) {
+	console.log(
+		`index ${i} 
+		argument -> 
+		${process.argv[i]}
+		`
+	);
+}
+
+
+
 nostril.namespace("nostril.UI.Controls")
 
 nostril.UI.Controls.nostril = function(){};
@@ -36,15 +50,14 @@ const parser = new ArgumentParser({
 });
 
 parser.add_argument('-v', '--version', { action: 'version', version });
+parser.add_argument('-s', '--sec', { help: 'sha256 hash value' });
 parser.add_argument('-f', '--foo', { help: 'foo bar' });
 parser.add_argument('-b', '--bar', { help: 'bar foo' });
 parser.add_argument('--baz', { help: 'baz bar' });
 
-//console.log(parser.parse_args());
-//console.dir(parser.parse_args());
-
-};
-nostril.UI.Controls.nostril.prototype.argparse();
+console.log(parser.parse_args());
+//console.log(Namespace.sec);
+console.dir(parser.parse_args());
 
 const { spawn } = require("node:child_process");
 
@@ -56,4 +69,6 @@ const commandProcess = spawn(
   }
 );
 
+};
 
+nostril.UI.Controls.nostril.prototype.argparse();
