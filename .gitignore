@@ -1,5 +1,7 @@
-install_manifest.txt
-
+node_modules
+CHANGELOG
+KEYS
+!deps/git/config.*
 *.o
 /.direnv/
 .privenv
@@ -9,9 +11,8 @@ configurator.out*
 configurator
 .build-result
 .buildcmd
-config.h
+!config.h
 tags
-libsecp256k1.a
 /target
 
 Cargo.lock
@@ -22,16 +23,14 @@ scripts/nostr-follows
 scripts/nostr-req
 scripts/subnote
 /dist
-/version
 
-.DS_Store
+**.DS_Store
 deps/.DS_Store
+deps/build/
 
-CMakeCache.txt
-CMakeFiles/
-cmake_install.cmake
+libgit.a
+libjq.a
+libtclstub.a
+libsecp256k1.a
 
-ext/secp256k1/INSTALL
-ext/secp256k1/CTestTestfile.cmake
-ext/secp256k1/DartConfiguration.tcl
-ext/secp256k1/src/CTestTestfile.cmake
+nostcat

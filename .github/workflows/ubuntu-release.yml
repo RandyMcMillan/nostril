@@ -18,20 +18,16 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - uses: styfle/cancel-workflow-action@0.11.0
-        if: ${{ !env.ACT }}
         with:
           access_token: ${{ github.token }}
       - uses: actions/checkout@v3
-        with:
-          fetch-depth: '0'
-          submodules: 'recursive'
-          set-safe-directory: 'true'
-      - name: printenv && sudo apt update && sudo apt install scdoc cmake -y
+      - name: "printenv"
         run: |
-          printenv && sudo apt update && sudo apt install scdoc cmake -y
+          printenv
       - name: "Build release"
         run: |
-          cmake . && make secp256k1 all
+          make submodules
+          make all
           mv nostril nostril-$RUNNER_OS-$RUNNER_ARCH
           shasum -a 256 nostril-$RUNNER_OS-$RUNNER_ARCH > nostril-$RUNNER_OS-$RUNNER_ARCH.sha256.txt
           mv nostril-query nostril-query-$RUNNER_OS-$RUNNER_ARCH
@@ -42,7 +38,6 @@ jobs:
       - name: Set output
         run: echo "{name}={value}" >> $GITHUB_OUTPUT
       - uses: "marvinpinto/action-automatic-releases@latest"
-        if: ${{ !env.ACT }}
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
           automatic_release_tag: ${{ matrix.os }}

@@ -22,17 +22,14 @@ jobs:
         with:
           access_token: ${{ github.token }}
       - uses: actions/checkout@v3
-        with:
-          fetch-depth: '0'
-          submodules: 'recursive'
-          set-safe-directory: 'true'
-      - name: printenv && sudo apt update && sudo apt install scdoc cmake -y
+      - name: "printenv"
         run: |
-          printenv && sudo apt update && sudo apt install scdoc cmake -y
+          printenv
       - name: "Build pre-release"
         run: |
-          cmake . && make secp256k1 all
-          mv nostril nostril-$RUNNER_OS-$RUNNER_ARCH
+          make submodules
+          make all
+          mv ./nostril ./nostril-$RUNNER_OS-$RUNNER_ARCH
           shasum -a 256 nostril-$RUNNER_OS-$RUNNER_ARCH > nostril-$RUNNER_OS-$RUNNER_ARCH.sha256.txt
           mv nostril-query nostril-query-$RUNNER_OS-$RUNNER_ARCH
           shasum -a 256 nostril-query-$RUNNER_OS-$RUNNER_ARCH > nostril-query-$RUNNER_OS-$RUNNER_ARCH.sha256.txt

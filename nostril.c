@@ -1,19 +1,13 @@
-
+#include <sys/types.h>
+#include <sys/stat.h>
 #include <stdio.h>
 #include <time.h>
 #include <stdlib.h>
 #include <assert.h>
 #include <errno.h>
 #include <inttypes.h>
-#ifdef _MSC_VER
-#else
+#include <limits.h>
 #include <unistd.h>
-#endif
-
-#ifdef _MSC_VER
-#include "clock_gettime.h"
-#define CLOCK_MONOTONIC 0
-#endif
 
 #include "secp256k1.h"
 #include "secp256k1_ecdh.h"
@@ -27,7 +21,7 @@
 #include "random.h"
 #include "proof.h"
 
-#define VERSION "0.1.3"
+#define VERSION "0.2.5"
 
 #define MAX_TAGS 32
 #define MAX_TAG_ELEMS 16
@@ -38,6 +32,52 @@
 #define HAS_ENCRYPT (1<<4)
 #define HAS_DIFFICULTY (1<<5)
 #define HAS_MINE_PUBKEY (1<<6)
+#define TO_BASE_N (sizeof(unsigned)*CHAR_BIT + 1)
+#define TO_BASE(x, b) my_to_base((char [TO_BASE_N]){""}, (x), (b))
+//                               ^--compound literal--^
+char *my_to_base(char buf[TO_BASE_N], unsigned i, int base) {
+  assert(base >= 2 && base <= 36);
+  char *s = &buf[TO_BASE_N - 1];
+  *s = '\0';
+  do {
+    s--;
+    *s = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"[i % base];
+    i /= base;
+  } while (i);
+
+  // Could employ memmove here to move the used buffer to the beginning
+  // size_t len = &buf[TO_BASE_N] - s;
+  // memmove(buf, s, len);
+
+  return s;
+}
+
+int print_base(int input) {
+
+  int ip1 = 0x01020304;
+  int ip2 = 0x05060708;
+  printf("%s %s\n", TO_BASE(ip1, 16), TO_BASE(ip2, 16));
+  printf("%s %s\n", TO_BASE(ip1, 2), TO_BASE(ip2, 2));
+  puts(TO_BASE(ip1, 8));
+  puts(TO_BASE(ip1, 36));
+  printf("%s %s\n", TO_BASE(input, 16), TO_BASE(input, 16));
+  printf("%s %s\n", TO_BASE(input, 2), TO_BASE(input, 2));
+  puts(TO_BASE(input, 8));
+  puts(TO_BASE(input, 36));
+  return 0;
+
+}
+
+
+int is_executable_file(char const * file_path)
+{
+    struct stat sb;
+    return
+        (stat(file_path, &sb) == 0) &&
+        S_ISREG(sb.st_mode) &&
+        (access(file_path, X_OK) == 0);
+}
+
 
 struct key {
 	secp256k1_keypair pair;
@@ -52,6 +92,7 @@ struct args {
 
 	unsigned char encrypt_to[32];
 	const char *sec;
+	const char *hash;
 	const char *tags;
 	const char *content;
 
@@ -79,6 +120,39 @@ struct nostr_event {
 	int num_tags;
 };
 
+void openssl_hash(int argc, const char *argv){
+
+	char command[128];
+	char target[128];
+	struct args args = {0};
+
+	args.hash = argv++; argc--;
+	if (args.hash){
+		strcpy(command, "echo");
+		strcat(command, " ");
+		strcat(command, args.hash);
+		strcat(command, "|");
+		strcat(command, "openssl dgst -sha256 | sed 's/SHA2-256(stdin)= //g'");
+		system(command);
+		exit(0);
+	}else{
+		strcpy(command, "0>/dev/null|openssl dgst -sha256 | sed 's/SHA2-256(stdin)= //g'");
+		system(command);
+		exit(0);
+	}
+			exit(0);
+}
+
+void about()
+{
+	printf("nostril is a tool that creates and signs nostr events.\n");
+	exit(0);
+}
+void version()
+{
+	printf("%s\n", VERSION);
+	exit(0);
+}
 void usage()
 {
 	printf("usage: nostril [OPTIONS]\n");
@@ -94,6 +168,9 @@ void usage()
 	printf("      --pow <difficulty>              number of leading 0 bits of the id to mine\n");
 	printf("      --mine-pubkey                   mine a pubkey instead of id\n");
 	printf("      --tag <key> <value>             add a tag\n");
+	printf("\n");
+	printf("      --hash <value>                  return sha256 of <value>\n");
+	printf("\n");
 	printf("      -e <event_id>                   shorthand for --tag e <event_id>\n");
 	printf("      -p <pubkey>                     shorthand for --tag p <pubkey>\n");
 	printf("      -t <hashtag>                    shorthand for --tag t <hashtag>\n");
@@ -437,17 +514,28 @@ static int parse_args(int argc, const char *argv[], struct args *args, struct no
 	for (; argc; ) {
 		arg = *argv++; argc--;
 
-		if (!strcmp(arg, "--help")) {
-			usage();
-		}
+		if (!strcmp(arg, "--help") | !strcmp(arg, "-h")) { usage(); }
+
+		if (!strcmp(arg, "--version") | !strcmp(arg, "-v")) { version(); }
+
+		if (!strcmp(arg, "--about") | !strcmp(arg, "-a")) { about(); }
+
+		if (!strcmp(arg, "--hash")){ openssl_hash(argc, *argv); }
 
 		if (!argc) {
 			fprintf(stderr, "expected argument: '%s'\n", arg);
 			return 0;
 		}
 
-		if (!strcmp(arg, "--sec")) {
+		if (!strcmp(arg, "--sec") || !strcmp(arg, "-s")) {
 			args->sec = *argv++; argc--;
+			if (args->sec){
+
+
+//				printf("%s",args->sec);
+
+
+			}
 		} else if (!strcmp(arg, "--created-at")) {
 			arg = *argv++; argc--;
 			if (!parse_num(arg, &args->created_at)) {
@@ -647,11 +735,7 @@ static int make_encrypted_dm(secp256k1_context *ctx, struct key *key,
 	unsigned char iv[16];
 	unsigned char compressed_pubkey[33];
 	int content_len = strlen(ev->content);
-#ifdef _MSC_VER
-	unsigned char* encbuf = malloc(content_len + (content_len % 16) + 1);
-#else
 	unsigned char encbuf[content_len + (content_len % 16) + 1];
-#endif
 	struct cursor cur;
 	secp256k1_pubkey pubkey;
 
@@ -680,8 +764,10 @@ static int make_encrypted_dm(secp256k1_context *ctx, struct key *key,
 		return 0;
 	}
 
-	fprintf(stderr, "shared_secret ");
-	print_hex(shared_secret, 32);
+	//print_hex
+	//shared_secret
+	//fprintf(stderr, "shared_secret ");
+	//print_hex(shared_secret, 32);
 
 	memcpy(encbuf, ev->content, strlen(ev->content));
 	enclen = aes_encrypt(shared_secret, iv, encbuf, strlen(ev->content));
@@ -726,9 +812,6 @@ static int make_encrypted_dm(secp256k1_context *ctx, struct key *key,
 
 	cur.p += 65;
 
-#ifdef _MSC_VER
-	free(encbuf);
-#endif
 	return 1;
 }
 
@@ -748,7 +831,7 @@ int main(int argc, const char *argv[])
 	struct args args = {0};
 	struct nostr_event ev = {0};
 	struct key key;
-        secp256k1_context *ctx;
+	secp256k1_context *ctx;
 
 	if (argc < 2)
 		usage();
@@ -784,7 +867,7 @@ int main(int argc, const char *argv[])
 			return 4;
 		}
 		fprintf(stderr, "secret_key ");
-		print_hex(key.secret, sizeof(key.secret));
+		//print_hex(key.secret, sizeof(key.secret));
 		fprintf(stderr, "\n");
 	}
 
