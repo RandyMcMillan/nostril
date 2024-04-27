@@ -48,7 +48,7 @@ jobs:
       ## - run: apk update && apk add autoconf automake build-base openssl-dev libtool make
       - run: touch ~/GITHUB_TOKEN.txt
       - run: git config --global --add safe.directory /__w/gnostr/gnostr || true
+      - run: cmake .
       - run: make
       - run: make secp256k1
-      - run: cmake .
       - run: make all
