@@ -46,9 +46,9 @@ jobs:
         run: |
           sudo mkdir -p /usr/local/share/man/man1/nostril.1
           make
-      - name: sudo make install
+      - name: make install
         run: |
-          sudo make install
+          make install
       - name: man nostril
         run: |
           man nostril
