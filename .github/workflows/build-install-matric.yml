@@ -61,4 +61,4 @@ jobs:
         run: |
           #pipe handles non-zero return from nostril default help
           file nostril
-          sudo ./nostril --sec $(gnostr-sha256) --content "gnostr-chat:topic:$(git rev-parse HEAD)" --tag gnostr-chat $(git rev-parse HEAD) | gnostr-post-event
+          ID=$(EVENT=$(nostril --sec $(gnostr-sha256 $(git rev-parse HEAD)) --content "gnostr-chat:topic:$(git rev-parse HEAD)" --tag gnostr-chat $(git rev-parse HEAD)) && echo $EVENT | gnostr-post-event >/dev/null; echo $EVENT | gnostr-xq .id); gnostr-fetch-by-id wss://nos.lol $(echo ${ID//\"})
