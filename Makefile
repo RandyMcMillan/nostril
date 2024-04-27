@@ -25,18 +25,27 @@ export TAR
 all: nostril docs## 	make nostril docs
 
 ##docs:
-##	doc/nostril.1 docker-start
-docs: doc/nostril.1 docker-start## 	docs: convert README to doc/nostr.1
+##	doc/nostril.1
+docs: doc/nostril.1## 	docs: convert README to doc/nostr.1
 #@echo docs
 	@bash -c 'if pgrep MacDown; then pkill MacDown; fi; 2>/dev/null'
 	@bash -c 'cat $(PWD)/sources/HEADER.md                >  $(PWD)/README.md 2>/dev/null'
 	@bash -c 'cat $(PWD)/sources/COMMANDS.md              >> $(PWD)/README.md 2>/dev/null'
 	@bash -c 'cat $(PWD)/sources/FOOTER.md                >> $(PWD)/README.md 2>/dev/null'
+##docs-iconv
+docs-iconv:## 	docs-iconv: convert README to index.html via iconv & pandoc
+	if hash iconv 2>/dev/null; then \
+		iconv -t utf-8 README | pandoc | iconv -f utf-8 > index.html && open index.html; \
+		fi;
+##docs-pandoc
+docs-pandoc:## 	docs-pandoc: convert README to index.html via pandoc
 	if hash pandoc 2>/dev/null; then \
 		bash -c 'pandoc -s README.md -o index.html' 2>/dev/null; \
-		fi || if hash docker 2>/dev/null; then \
-		docker run --rm --volume "`pwd`:/data" --user `id -u`:`id -g` pandoc/latex:2.6 README.md; \
-		fi
+		fi;
+docs-docker:docker-start## 	convert README to index.html via pandoc/core:latest (docker image)
+	if hash docker 2>/dev/null; then \
+		docker run --rm --volume "`pwd`:/data" --user `id -u`:`id -g` pandoc/core:latest README > index.html 2>/dev/null; \
+		fi;
 	@git add --ignore-errors sources/*.md 2>/dev/null
 	@git add --ignore-errors *.md 2>/dev/null
 #@git ls-files -co --exclude-standard | grep '\.md/$\' | xargs git

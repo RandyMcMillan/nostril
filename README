@@ -14,39 +14,39 @@ nostril - generate nostr events
 
 # OPTIONS
 
-*--content*
+*\--content*
 	The text contents of the note
 
-*--dm* <hex pubkey>
+*\--dm* \<hex pubkey>
 	Create a direct message. This will create a kind-4 note with the
 	contents encrypted>
 
-*--envelope*
+*\--envelope*
 	Wrap the event with `["EVENT", ... ]` for easy relaying
 
-*--kind* <number>
+*\--kind* <number>
 	Set the kind of the note
 
-*--created-at* <unix timestamp>
+*\--created-at* <unix timestamp>
 	Set the created at. Optional, this is set automatically.
 
-*--mine-pubkey*
+*\--mine-pubkey*
 	Mine a pubkey. This may or may not be cryptographically dubious.
 
-*--pow* <difficulty>
+*\--pow* <difficulty>
 	Number of leading 0 bits of the id the mine for proof-of-work.
 
-*--tag* <key> <value>
+*\--tag* <key> <value>
 	Add a tag with a single value
 
 *-t*
-	Shorthand for --tag t <hashtag>
+	Shorthand for \--tag t <hashtag>
 
 *-p*
-	Shorthand for --tag p <hex pubkey>
+	Shorthand for \--tag p <hex pubkey>
 
 *-e*
-	Shorthand for --tag e <note id>
+	Shorthand for \--tag e <note id>
 
 
 # Examples

@@ -143,7 +143,7 @@ help:##
 .ONESHELL:
 docker-start:
 	@touch requirements.txt
-	@test -d .venv || pipx install virtualenv && virtualenv .venv
+	@test -d .venv || pipx install virtualenv && virtualenv .venv >/dev/null
 	@( \
 	   source .venv/bin/activate; pip install -q -r requirements.txt; \
 	   python3 -m pip install -q pipenv \
