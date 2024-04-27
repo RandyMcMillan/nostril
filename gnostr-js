@@ -1,18 +1,18 @@
 #!/usr/bin/env node
 'use strict';
 
-if (!gnostr) {
-        var gnostr = {};
+if (!nostril) {
+        var nostril = {};
 }
 
-gnostr.namespace = function () {
+nostril.namespace = function () {
     var a = arguments,
         o = null,
         i, j, d;
     for (i = 0; i < a.length; i = i + 1) {
         d = ("" + a[i]).split(".");
-        o = gnostr;
-        for (j = (d[0] == "gnostr") ? 1 : 0; j < d.length; j = j + 1) {
+        o = nostril;
+        for (j = (d[0] == "nostril") ? 1 : 0; j < d.length; j = j + 1) {
             o[d[j]] = o[d[j]] || {};
             o = o[d[j]];
         }
@@ -20,10 +20,10 @@ gnostr.namespace = function () {
     return o;
 }
 
-gnostr.namespace("gnostr.UI.Controls")
+nostril.namespace("nostril.UI.Controls")
 
-gnostr.UI.Controls.Gnostr = function(){};
-gnostr.UI.Controls.Gnostr.prototype.argparse = function(){
+nostril.UI.Controls.nostril = function(){};
+nostril.UI.Controls.nostril.prototype.argparse = function(){
 
 //test();
 
@@ -32,7 +32,7 @@ const { ArgumentParser } = require('argparse');
 //const { version } = require('./package.json');
 
 const parser = new ArgumentParser({
-  description: 'gnostr'
+  description: 'nostril'
 });
 
 parser.add_argument('-v', '--version', { action: 'version', version });
@@ -44,7 +44,7 @@ parser.add_argument('--baz', { help: 'baz bar' });
 //console.dir(parser.parse_args());
 
 };
-gnostr.UI.Controls.Gnostr.prototype.argparse();
+nostril.UI.Controls.nostril.prototype.argparse();
 
 const { spawn } = require("node:child_process");
 
