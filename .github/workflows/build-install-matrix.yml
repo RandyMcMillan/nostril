@@ -41,9 +41,6 @@ jobs:
       - name: printenv && brew install cmake scdoc autoconf automake rustup-init libtool || sudo apt update && sudo apt install rustup-init scdoc cmake -y
         run: |
           printenv && brew install cmake scdoc autoconf automake rustup-init libtool || sudo apt update && sudo apt install rustup-init scdoc cmake -y || true
-      - name: cargo install gnostr-bins gnostr-xq
-        run: |
-          cargo install gnostr-bins gnostr-xq
       - name: rm -rf deps
         run: |
           rm -rf deps
@@ -58,6 +55,9 @@ jobs:
       - name: man nostril
         run: |
           sudo man doc/nostril.1
+      - name: cargo install gnostr-bins gnostr-xq
+        run: |
+          cargo install gnostr-bins gnostr-xq
       - name: nostril
         run: |
           file nostril
