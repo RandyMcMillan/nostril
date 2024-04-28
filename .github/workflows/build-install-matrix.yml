@@ -44,6 +44,7 @@ jobs:
       - name: rm -rf deps
         run: |
           rm -rf deps
+          make libsecp256k1.a 
       - name: make
         run: |
           sudo mkdir -p /usr/local/share/man/man1 || true
