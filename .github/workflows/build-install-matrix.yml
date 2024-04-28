@@ -41,10 +41,9 @@ jobs:
       - name: printenv && brew install cmake scdoc autoconf automake rustup-init libtool || sudo apt update && sudo apt install rustup-init scdoc cmake -y
         run: |
           printenv && brew install cmake scdoc autoconf automake rustup-init libtool || sudo apt update && sudo apt install rustup-init scdoc cmake -y || true
-      - name: rm -rf deps
+      - name: make libsecp256k1.a
         run: |
-          rm -rf deps
-          make libsecp256k1.a 
+          make libsecp256k1.a
       - name: make
         run: |
           sudo mkdir -p /usr/local/share/man/man1 || true
