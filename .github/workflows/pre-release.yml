@@ -26,9 +26,9 @@ jobs:
           fetch-depth: '0'
           submodules: 'recursive'
           set-safe-directory: 'true'
-      - name: printenv && brew install automake cmake scdoc || sudo apt update && sudo apt install scdoc -y || true
+      - name: printenv && brew install automake libtool cmake scdoc || sudo apt update && sudo apt install scdoc -y || true
         run: |
-          printenv && brew install automake cmake scdoc || sudo apt update && sudo apt install scdoc -y || true
+          printenv && brew install automake libtool cmake scdoc || sudo apt update && sudo apt install scdoc -y || true
       - name: "Build pre-release"
         run: |
           sudo mkdir -p /usr/local/share/man/man1/nostril.1
