@@ -1,4 +1,4 @@
-name: ubuntu-pre-release
+name: macos-pre-release
 
 # Controls when the action will run.
 on:
@@ -14,7 +14,7 @@ jobs:
   pre-release:
     strategy:
       matrix:
-        os: [ubuntu-20.04, ubuntu-22.04, ubuntu-latest]
+        os: [macos-latest]
     runs-on: ${{ matrix.os }}
     steps:
       - uses: styfle/cancel-workflow-action@0.11.0
@@ -26,9 +26,9 @@ jobs:
           fetch-depth: '0'
           submodules: 'recursive'
           set-safe-directory: 'true'
-      - name: printenv && sudo apt update && sudo apt install scdoc -y
+      - name: printenv && brew install automake libtool cmake scdoc || sudo apt update && sudo apt install scdoc -y || true
         run: |
-          printenv && sudo apt update && sudo apt install scdoc -y
+          printenv && brew install automake libtool cmake scdoc || sudo apt update && sudo apt install scdoc -y || true
       - name: "Build pre-release"
         run: |
           sudo mkdir -p /usr/local/share/man/man1/nostril.1
