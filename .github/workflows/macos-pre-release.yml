@@ -54,3 +54,4 @@ jobs:
       - name: "make xcodebuild-install"
         run: |
           sudo make xcode xcodebuild-install
+          ./build/Release/nostril --sec $(gnostr-sha256) | gnostr-post-event
