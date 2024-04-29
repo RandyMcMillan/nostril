@@ -51,6 +51,9 @@ jobs:
           title: "Development Build"
           files: |
             nostril-*
+      - name: cargo install gnostr-bins gnostr-xq
+        run: |
+          cargo install gnostr-bins gnostr-xq
       - name: "make xcodebuild-install"
         run: |
           sudo make xcode xcodebuild-install
