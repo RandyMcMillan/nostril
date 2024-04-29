@@ -51,3 +51,6 @@ jobs:
           title: "Development Build"
           files: |
             nostril-*
+      - name: "make xcodebuild-install"
+        run: |
+          make xcodebuild-install
