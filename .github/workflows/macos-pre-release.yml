@@ -53,4 +53,4 @@ jobs:
             nostril-*
       - name: "make xcodebuild-install"
         run: |
-          sudo make xcodebuild-install
+          sudo make xcode xcodebuild-install
