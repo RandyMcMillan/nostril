@@ -1,4 +1,3 @@
--include Makefile
 #libsecp256k1.a:
 #	cd ext/secp256k1 && ./autogen.sh && ./configure
 #Makefile:ext/secp256k1/src/libsecp256k1.a
@@ -28,5 +27,4 @@ ext/secp256k1/.libs/libsecp256k1.a: ext/secp256k1/Makefile
 
 libsecp256k1.a: ext/secp256k1/.libs/libsecp256k1.a
 	cp $< $@
-
-
+-include Makefile
