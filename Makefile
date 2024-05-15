@@ -49,7 +49,7 @@ nostril: $(HEADERS) $(OBJS)## 	nostril
 install: all## 	install
 	@mkdir -p $(PREFIX)/bin || true
 	@install -m644 doc/nostril.1 $(PREFIX)/share/man/man1/nostril.1 || true
-	@install -m755 nostril $(PREFIX)/bin/nostril || true
+	@install -m755 ./nostril $(PREFIX)/bin/nostril || true
 	@install -m755 nostril-query $(PREFIX)/bin/nostril-query || true
 	@$(shell which nostril)
 
