@@ -77,7 +77,7 @@ jobs:
 
       - run: touch ~/GITHUB_TOKEN.txt
       - run: git config --global --add safe.directory /__w/gnostr/gnostr || true
-      - run: make detect
+      - run: make detect | sudo make detect
       ## objective: non-cmake build/install
       - run: make nostril install || sudo make nostril install
       ## objective: test gnostr-am with crate gnostr-sha256
