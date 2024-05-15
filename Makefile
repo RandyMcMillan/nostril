@@ -23,7 +23,7 @@ all: libsecp256k1.a nostril docs## 	nostril docs
 
 docs: doc/nostril.1## 	docs
 doc/nostril.1: README.md## 	doc/nostril.1
-	@scdoc < $^ > $@
+	@scdoc < $^ > $@ || help2man ./nostril > doc/nostril.1
 
 version: nostril.c## 	version
 	@grep '^#define VERSION' $< | sed -En 's,.*"([^"]+)".*,\1,p' > $@
