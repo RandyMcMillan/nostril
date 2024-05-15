@@ -440,6 +440,14 @@ static int parse_args(int argc, const char *argv[], struct args *args, struct no
 		if (!strcmp(arg, "--help")) {
 			usage();
 		}
+		if (!strcmp(arg, "--version")) {
+		printf("v%s",VERSION);
+		exit(0);
+		}
+		if (!strcmp(arg, "-v")) {
+		printf("v%s",VERSION);
+		exit(0);
+		}
 
 		if (!argc) {
 			fprintf(stderr, "expected argument: '%s'\n", arg);
