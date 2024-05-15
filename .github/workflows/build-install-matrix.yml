@@ -41,9 +41,10 @@ jobs:
       - name: printenv && brew install scdoc autoconf automake rustup-init libtool || sudo apt update && sudo apt install rustup-init scdoc -y
         run: |
           printenv && brew install scdoc autoconf automake rustup-init libtool || sudo apt update && sudo apt install rustup-init scdoc -y || true
-      - name: cargo install gnostr-bins gnostr-cat gnostr-xq
+      - name: cargo-binstall install gnostr-bins
         run: |
-          cargo install gnostr-bins
+          cargo install cargo-binstall
+          cargo-binstall install gnostr-bins
       - name: rm -rf deps
         run: |
           rm -rf deps
