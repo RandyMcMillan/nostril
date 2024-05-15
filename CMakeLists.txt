@@ -12,7 +12,14 @@ endif()
 project (nostril C)
 
 include_directories(${CMAKE_SOURCE_DIR}/ext/secp256k1/include)
-add_subdirectory(${CMAKE_SOURCE_DIR}/ext/secp256k1)
+#add_subdirectory(${CMAKE_SOURCE_DIR}/ext/secp256k1)
+#set_target_properties(libsecp256k1.a PROPERTIES IMPORTED_LOCATION ${CMAKE_SOURCE_DIR}/ext/secp256k1/sec/libsecp256k1.a)
+#add_library(${CMAKE_SOURCE_DIR}/libsecp256k1.a SHARED IMPORTED)
+
+##set(lib_dep ${lib_dep} secp256k1)
+# Provide the full path to the library, so CMake knows where to find it.
+#set(lib_dep ${lib_dep} ${CMAKE_SOURCE_DIR}/libsecp256k1.a)
+
 
 #//////////////////////////
 #windows.h header file has macros for min and max, nostril defines max
@@ -54,7 +61,8 @@ if (MSVC)
   set(lib_dep ${lib_dep} ${CMAKE_BINARY_DIR}/ext/secp256k1/src/Debug/libsecp256k1.lib)
   set(lib_dep ${lib_dep} Bcrypt.lib)
 else()
-  set(lib_dep ${lib_dep} ${CMAKE_BINARY_DIR}/ext/secp256k1/src/libsecp256k1.a)
+  ##set(lib_dep ${lib_dep} ${CMAKE_BINARY_DIR}/libsecp256k1.a)
+  set(lib_dep ${lib_dep} ${CMAKE_SOURCE_DIR}/libsecp256k1.a)
 endif()
 
 
@@ -79,6 +87,17 @@ add_custom_command(
     COMMAND configurator > config.h
     COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_BINARY_DIR}/config.h" ${CMAKE_SOURCE_DIR}
     COMMENT "generating config.h"
+)
+## add_custom_command(
+##     TARGET secp256k1
+##     PRE_BUILD
+##     COMMAND make secp256k1
+##     COMMENT "make secp256k1"
+## )
+
+execute_process (
+    COMMAND bash -c "date +'%F %T'"
+    OUTPUT_VARIABLE outVar
 )
 
 #//////////////////////////
