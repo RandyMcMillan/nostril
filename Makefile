@@ -22,12 +22,11 @@ help:## 	print verbose help
 all: libsecp256k1.a nostril docs## 	nostril docs
 
 docs: doc/nostril.1## 	docs
-
 doc/nostril.1: README.md## 	doc/nostril.1
-	scdoc < $^ > $@
+	@scdoc < $^ > $@
 
 version: nostril.c## 	version
-	grep '^#define VERSION' $< | sed -En 's,.*"([^"]+)".*,\1,p' > $@
+	@grep '^#define VERSION' $< | sed -En 's,.*"([^"]+)".*,\1,p' > $@
 
 dist: docs version## 	dist
 	@mkdir -p dist
@@ -67,4 +66,4 @@ clean:## 	clean
 tags: fake
 	ctags *.c *.h
 
-.PHONY: fake nostril
+.PHONY:docs doc/nostril.1 fake nostril version
