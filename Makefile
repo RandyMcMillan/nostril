@@ -7,7 +7,7 @@ ARS = libsecp256k1.a
 
 SUBMODULES = ext/secp256k1
 
-default:
+default: all
 	@awk 'BEGIN {FS = ":.*?## "} /^[a-zA-Z_-]+:.*?##/ {printf "\033[36m%-15s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST)
 help:## 	print verbose help
 	@echo ''
@@ -19,17 +19,17 @@ help:## 	print verbose help
 	@echo "Useful Commands:"
 	@echo ""
 
-all: nostril docs## 	nostril docs
+all: libsecp256k1.a nostril docs## 	nostril docs
 
-docs: doc/nostril.1
+docs: doc/nostril.1## 	docs
 
-doc/nostril.1: README.md
+doc/nostril.1: README.md## 	doc/nostril.1
 	scdoc < $^ > $@
 
-version: nostril.c
+version: nostril.c## 	version
 	grep '^#define VERSION' $< | sed -En 's,.*"([^"]+)".*,\1,p' > $@
 
-dist: docs version
+dist: docs version## 	dist
 	@mkdir -p dist
 	git ls-files --recurse-submodules | $(shell which gtar || which tar) --transform 's/^/nostril-$(shell cat version)\//' -T- -caf dist/nostril-$(shell cat version).tar.gz
 	@ls -dt dist/* | head -n1 | xargs echo "tgz "
@@ -44,23 +44,23 @@ dist: docs version
 	@echo "cc $<"
 	@$(CC) $(CFLAGS) -c $< -o $@
 
-nostril: $(HEADERS) $(OBJS)
-	$(CC) $(CFLAGS) $(OBJS) $(ARS) -o $@ || $(MAKE) $(ARS)
-	@git checkout ext 2>/dev/null
+nostril: $(HEADERS) $(OBJS)## 	nostril
+	@$(CC) $(CFLAGS) $(OBJS) $(ARS) -o $@ || $(MAKE) $(ARS)
 
-install: all
-	mkdir -p $(PREFIX)/bin || true
-	install -m644 doc/nostril.1 $(PREFIX)/share/man/man1/nostril.1 || true
-	install -m755 nostril $(PREFIX)/bin/nostril || true
-	install -m755 nostril-query $(PREFIX)/bin/nostril-query || true
+install: all## 	install
+	@mkdir -p $(PREFIX)/bin || true
+	@install -m644 doc/nostril.1 $(PREFIX)/share/man/man1/nostril.1 || true
+	@install -m755 nostril $(PREFIX)/bin/nostril || true
+	@install -m755 nostril-query $(PREFIX)/bin/nostril-query || true
+	@$(shell which nostril)
 
-config.h: configurator
+config.h: configurator## 	config.h
 	./configurator > $@
 
-configurator: configurator.c
+configurator: configurator.c## 	configurator
 	$(CC) $< -o $@
 
-clean:
+clean:## 	clean
 	rm -f nostril *.o *.a
 	rm -rf ext/secp256k1/.lib
 
