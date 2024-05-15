@@ -51,7 +51,7 @@ jobs:
       - run: git config --global --add safe.directory /__w/gnostr/gnostr || true
       - run: make detect
       ## objective: non-cmake build/install
-      - run: make nostril
+      - run: make nostril install
       ## objective: test gnostr-am with crate gnostr-sha256
       - run: nostril --sec $(gnostr-sha256)
       - run: cmake .
