@@ -96,7 +96,7 @@ add_custom_command(
 ## )
 
 execute_process (
-    COMMAND bash -c "date +'%F %T'"
+    COMMAND bash -c "git update-index --assume-unchanged Makefile"
     OUTPUT_VARIABLE outVar
 )
 
