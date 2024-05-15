@@ -1,3 +1,11 @@
+ext/secp256k1/CMakeFiles/
+ext/secp256k1/CTestTestfile.cmake
+ext/secp256k1/DartConfiguration.tcl
+ext/secp256k1/cmake_install.cmake
+ext/secp256k1/src/CMakeFiles/
+ext/secp256k1/src/CTestTestfile.cmake
+ext/secp256k1/src/cmake_install.cmake
+
 *.o
 /.direnv/
 .privenv
