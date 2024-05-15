@@ -24,3 +24,6 @@ libsecp256k1.a: ext/secp256k1/.libs/libsecp256k1.a
 	@cp $< $@ || make ext/secp256k1/.libs/libsecp256k1.a
 
 -include Makefile
+
+detect:
+	echo "TODO"
