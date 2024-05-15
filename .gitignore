@@ -1,3 +1,8 @@
+cmake_install.cmake
+
+CMakeCache.txt
+CMakeFiles/
+
 ext/secp256k1/CMakeFiles/
 ext/secp256k1/CTestTestfile.cmake
 ext/secp256k1/DartConfiguration.tcl
