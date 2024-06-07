@@ -69,5 +69,11 @@ fn main() -> std::io::Result<()> {
         .status()
         .expect("script.sh command failed to start");
 
+    Command::new("cargo")
+        .arg("install")
+        .arg("gnostr-bins")
+        //.spawn()
+        .status()
+        .expect("script.sh command failed to start");
     Ok(())
 }
