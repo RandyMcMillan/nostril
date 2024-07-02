@@ -57,3 +57,5 @@ xcode/deps/secp256k1/src/libsecp256k1.pc
 xcode/deps/secp256k1/src/Debug/
 xcode/nostril.xcodeproj/project.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist
 xcode/nostril.xcodeproj/xcshareddata/
+.nvmrc
+.gnostr/proxy
