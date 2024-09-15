@@ -49,9 +49,9 @@ jobs:
         if: ${{ !env.ACT }}
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          automatic_release_tag: ${{ matrix.os }}
+          automatic_release_tag: ${{ matrix.os }}-${{ env.RUNNER_ARCH }}
           prerelease: false
-          title: "Release Build"
+          title: "Release-${{ matrix.os }}-${{ env.RUNNER_ARCH }}"
           files: |
             nostril-*
             nostril*
