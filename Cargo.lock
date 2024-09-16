@@ -1381,6 +1381,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "gnostr"
+version = "0.0.54"
+dependencies = [
+ "gnostr-bins",
+]
+
+[[package]]
 name = "gnostr-bins"
 version = "0.0.53"
 dependencies = [
@@ -1453,13 +1460,6 @@ dependencies = [
  "thread-priority",
  "url",
  "zeroize",
-]
-
-[[package]]
-name = "gnostr_lib"
-version = "0.0.1"
-dependencies = [
- "gnostr-bins",
 ]
 
 [[package]]
