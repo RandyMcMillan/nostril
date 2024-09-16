@@ -92,6 +92,8 @@ jobs:
       - run: cargo search gnostr --limit 100
       #- run: cargo install cargo-binstall
       #- run: cargo-binstall --no-confirm gnostr-bins
+      #test nostril --hash should force upgrade if available
+      - run: cargo install gnostr-bins
       - run: cargo install mempool_space
       - run: mkdir -p ~/bin
 
