@@ -1,5 +1,15 @@
 #!/usr/bin/env bash
 
+IDIOT_KEY=$(gnostr-xor d840027d536f5a209d54636d7c81dddeaf93519a9d7ecb0b88db20b1d6a8fdc8 $(gnostr-sha256))
+
+for relay in $(gnostr-get-relays --nip 50 -s);do
+    echo $relay;
+    nostril --sec $IDIOT_KEY --dm $IDIOT_KEY | gnostr-post-event --relay $relay
+    nostril --sec $(gnostr-sha256 $IDIOT_KEY$(gnostr-weeble)) --dm $IDIOT_KEY | gnostr-post-event --relay $relay
+    nostril --sec $(gnostr-sha256 $IDIOT_KEY$(gnostr-weeble)$(gnostr-blockheight)) --dm $IDIOT_KEY | gnostr-post-event --relay $relay
+    nostril --sec $(gnostr-sha256 $IDIOT_KEY$(gnostr-weeble)$(gnostr-blockheight)$(gnostr-wobble)) --dm $IDIOT_KEY | gnostr-post-event --relay $relay
+    done
+
 mkdir -p $HOME/.gnostr || true #TODO windows
 
 GNOSTR_DIR=$HOME/.gnostr/
@@ -18,7 +28,7 @@ type -P mempool-space_blocks_tip_hash >/dev/null || cargo binstall mempool_space
 
 EUC=$(git rev-list --reverse --topo-order --first-parent HEAD | sed 1q)
 ROOT=$(git rev-list HEAD | tail -n 1)
-ORIGIN=$(git remotes | grep origin | sed 's/origin//g' | sed 's/       //g' | sed 's/ (fetch)//g' | sed 's/ (push)//g' | head -n 1)
+ORIGIN=$(git remote get-url origin)
 #echo $ORIGIN
 TOPIC_BRANCH=$((git symbolic-ref HEAD 2>/dev/null || echo "(unnamed branch)")|cut -d/ -f3-) #&& echo $TOPIC_BRANCH
 #echo $TOPIC_BRANCH
@@ -52,7 +62,7 @@ NIP_05="gnostr@gnostr.org"
 CREATED_AT=$(date +%s)
 
 MESSAGE="{\"banner\":\"$BANNER\",\"website\":\"$WEBSITE\",\"lud06\":\"$LUD06\",\"lud16\":\"$LUD16\",\"nip05\":\"$NIP_05\",\"picture\":\"https://avatars.githubusercontent.com/u/135379339?s=400&u=e38855df24087feb9a6679c5e3974816e6aa3753&v=4\",\"display_name\":\"$DISPLAY_NAME\",\"about\":\"$ABOUT_ME\",\"name\":\"$NAME\"}"
-echo $MESSAGE
+echo $MESSAGE | gnostr-xq
 
 for relay in $RELAYS_STRIPPED;do
 WEEBLE=$(gnostr-weeble)
@@ -108,6 +118,63 @@ AUD=$(mempool-space_prices | gnostr-xq .AUD)
 #./gnostr-nip --sec $ALIAS_PRIV_KEY | gnostr-post-event --relay $relay & sleep 1 || true
 #./nostril --sec $(gnostr-sha256) --tag USD $USD --content "HEIGHT:$BLOCKS_TIP_HEIGHT:\$USD:$USD:\$EUR:$EUR:\$GBP:$GBP:\$CAD:$CAD:\$CHF:$CHF:\$AUD:$AUD" | gnostr-post-event --relay $relay & sleep 1 || true
 #./nostril --sec $BLOCKS_TIP_HASH --tag USD $USD --content "HEIGHT:$BLOCKS_TIP_HEIGHT:\$USD:$USD:\$EUR:$EUR:\$GBP:$GBP:\$CAD:$CAD:\$CHF:$CHF:\$AUD:$AUD" | gnostr-post-event --relay $relay & sleep 1 || true
+
+
+
+KIND_30617='{"kind": 30617,"content": "","tags": [["d", "<repo-id>"],["name", "<human-readable project name>"],["description", "brief human-readable project description>"],["web", "<url for browsing>"],["clone", "<url for git-cloning>"],["relays", "<relay-url>"],["r", "<earliest-unique-commit-id>", "euc"],["maintainers", "<other-recognized-maintainer>"]]}'
+echo $KIND_30617 #| gnostr-xq
+
+nostril --sec $(gnostr-sha256) --kind 30617 --tag "d", "<repo-id>" --tag "name", "<human-readable project name>" --tag "description", "brief human-readable project description>" --tag "web", "<url for browsing>" --tag "clone", "<url for git-cloning>" --tag "relays", "<relay-url>" -t "r", --tag "<earliest-unique-commit-id>", "euc" --tag "maintainers", "<other-recognized-maintainer>" | gnostr-post-event
+
+echo
+
+KIND_30618='{"kind": 30618,"content": "","tags": [["d", "<repo-id>"],["refs/<heads|tags>/<branch-or-tag-name>","<commit-id>"],["HEAD", "ref: refs/heads/<branch-name>"]]}'
+echo $KIND_30618 #| gnostr-xq
+
+nostril --sec $(gnostr-sha256) --kind 30618  --tag "d" "<repo-id>" --tag "refs/<heads|tags>/<branch-or-tag-name>" "<commit-id>" --tag "HEAD" "ref: refs/heads/<branch-name>" | gnostr-post-event
+
+echo
+
+KIND_30618='{"kind": 30618,"content": "","tags": [["d", "<repo-id>"],["refs/<heads|tags>/<branch-or-tag-name>","<commit-id>","<shorthand-parent-commit-id>"]]}'
+echo $KIND_30618 #| gnostr-xq
+
+nostril --sec $(gnostr-sha256) --kind 30618  --tag "d" "<repo-id>" --tag "refs/<heads|tags>/<branch-or-tag-name>" "<commit-id>" --tag "parent-commit" "<shorthand-parent-commit-id>" | gnostr-post-event
+
+echo
+
+KIND_1617='{"kind": 1617,"content": "<patch>","tags": [["a", "30617:<base-repo-owner-pubkey>:<base-repo-id>"],["r", "<earliest-unique-commit-id-of-repo>"],["p", "<repository-owner>"],["p", "<other-user>"],["t", "root"],["t", "root-revision"],["commit", "<current-commit-id>"],["r", "<current-commit-id>"],["parent-commit", "<parent-commit-id>"],["commit-pgp-sig", "-----BEGIN PGP SIGNATURE-----..."],["committer", "<name>", "<email>", "<timestamp>", "<timezone offset in minutes>"]]}'
+echo $KIND_1617 #| gnostr-xq
+
+nostril --sec $(gnostr-sha256) --kind 1617 | gnostr-post-event
+
+echo 
+
+
+## gnostr-post-event needs to handle this format
+## @fiatjaf is rtrdd for using : (colons) in this way!!
+
+KIND_1621='{"kind": 1621,"content": "<markdown text>","tags": [["a", "30617:<base-repo-owner-pubkey>:<base-repo-id>"],["p", "<repository-owner>"]]}'
+echo $KIND_1621 #| gnostr-xq
+
+##nostril --sec $(gnostr-sha256) --kind 1621 --content "<patch>" --tag a "30617:<base-repo-owner-pubkey>:<base-repo-id>" --tag p  "<repository-owner>" | gnostr-post-event
+
+echo
+
+KIND_1622='{"kind": 1622,"content": "<markdown text>","tags": [["a", "30617\:<base-repo-owner-pubkey>\:<base-repo-id>", "<relay-url>"],["e", "<issue-or-patch-id-hex>", "", "root"],["p", "<patch-author-pubkey-hex>", "", "mention"],["e", "<previous-reply-id-hex>", "", "reply"]]}'
+echo $KIND_1622 #| gnostr-xq
+
+##nostril --sec $(gnostr-sha256) --kind 1622 --content "<markdown text>" --tag a "30617:<base-repo-owner-pubkey>:<base-repo-id>\"" --tag "relay-url" "git@<url>.git" --tag e "<issue-or-patch-id-hex>","","root" | gnostr-post-event
+
+echo
+
+KIND_STATUS='{"kind": 1630,"kind": 1631,"kind": 1632,"kind": 1633,"content": "<markdown text>","tags": [["e", "<issue-or-original-root-patch-id-hex>", "", "root"],["e", "<accepted-revision-root-id-hex>", "", "reply"],["p", "<repository-owner>"],["p", "<root-event-author>"],["p", "<revision-author>"],["a", "30617:<base-repo-owner-pubkey>:<base-repo-id>", "<relay-url>"],["r", "<earliest-unique-commit-id-of-repo>"],["e", "<applied-or-merged-patch-event-id>", "",
+"mention"],["merge-commit","<merge-commit-id>"],["r", "<merge-commit-id>"],["applied-as-commits", "<commit-id-in-master-branch>]",["r", "<applied-commit-id>"]]]}'
+echo $KIND_STATUS #| gnostr-xq
+
+nostril --sec $(gnostr-sha256) --kind 1630 --kind 1632 --kind 1633 | gnostr-post-event
+
+echo
+
 
 nostril --sec $PRIV_KEY \
 --kind 30617 \

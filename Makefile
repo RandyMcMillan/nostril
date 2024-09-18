@@ -19,7 +19,7 @@ help:## 	print verbose help
 	@echo "Useful Commands:"
 	@echo ""
 
-all: libsecp256k1.a nostril docs## 	nostril docs
+all: cargo-br libsecp256k1.a nostril docs## 	nostril docs
 
 docs: doc/nostril.1## 	docs
 doc/nostril.1: README.md## 	doc/nostril.1
@@ -67,6 +67,7 @@ install: all## 	install
 	@install -m755 ./nostril $(PREFIX)/bin/gnostr || true
 	#@$(shell which nostril)
 	#@$(shell which gnostr)
+	$(MAKE) cargo-install
 
 config.h: configurator## 	config.h
 	./configurator > $@
