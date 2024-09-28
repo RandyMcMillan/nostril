@@ -1,8 +1,12 @@
+use bitcoin_hashes::sha256;
+use bitcoin_hashes::Hash;
 use clap::builder::TypedValueParser as _;
 use clap::Parser;
 use gnostr_bins::{blockheight, relays, weeble, wobble};
 use std::error::Error;
+use std::io::Write;
 use std::process::exit;
+use zerocopy::AsBytes;
 
 #[derive(Parser, Debug)] // requires `derive` feature
 #[command(term_width = 0)] // Just to make testing across clap features easier
@@ -98,13 +102,24 @@ mod foreign_crate {
     }
 }
 
-fn main() -> () {
-    let weeble = get_weeble();
-    let blockheight = get_blockheight();
-    let wobble = get_wobble();
-
-    let wbhw = format!("{}/{}/{}", weeble, blockheight, wobble);
+fn main() -> Result<(), std::io::Error> {
+    let wbhw = format!("{}/{}/{}", get_weeble(), get_blockheight(), get_wobble());
     println!("{}", wbhw);
+
+    let hash_of_weeble = sha256::Hash::hash(get_weeble().as_bytes_mut());
+    println!("{}", hash_of_weeble);
+    let mut hash_of_blockheight = sha256::Hash::hash(get_blockheight().as_bytes_mut());
+    println!("{}", hash_of_blockheight);
+    let mut hash_of_wobble = sha256::Hash::hash(get_wobble().as_bytes_mut());
+    println!("{}", hash_of_wobble);
+
+    let hexd = hex::decode("48656c6c6f20776f726c6421");
+    println!("{:?}", hexd.unwrap());
+    let hello_world = b"Hello world!";
+    let hello_worl = b"hello worl!_";
+    println!("{:?}", hello_world);
+    println!("{:?}", xor(hello_world, hello_worl));
+
     let args = Args::parse();
     println!("{args:?}");
 
@@ -122,6 +137,9 @@ pub fn get_blockheight() -> u64 {
 }
 pub fn get_wobble() -> u64 {
     wobble().unwrap() as u64
+}
+pub fn xor<'a>(left: &'a [u8; 12], right: &'a [u8; 12]) -> u8 {
+    &left[0] ^ &right[0]
 }
 pub fn div(left: usize, right: usize) -> usize {
     left / right
