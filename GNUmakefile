@@ -5,7 +5,7 @@ else
 PROJECT_NAME                            := $(project)
 endif
 export PROJECT_NAME
-VERSION                                 :=$(shell cat version)
+VERSION                                 :=$(shell touch version && cat version)
 export VERSION
 TIME                                    :=$(shell date +%s)
 export TIME
