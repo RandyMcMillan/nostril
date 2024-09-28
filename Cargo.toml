@@ -1,10 +1,10 @@
 [package]
-name = "gnostr"
-version = "0.0.54"
+name = "gnit"
+version = "0.0.0"
 edition = "2021"
-repository = "https://github.com/gnostr-org/gnostr.git"
-homepage = "https://github.com/gnostr-org/gnostr.git"
-documentation = "https://github.com/gnostr-org/gnostr.git"
+repository = "https://github.com/gnostr-org/gnit.git"
+homepage = "https://github.com/gnostr-org/gnit.git"
+documentation = "https://github.com/gnostr-org/gnit.git"
 description = "gnostr: git+nostr workflow utility"
 
 [dependencies]
