@@ -1,6 +1,6 @@
 [package]
 name = "gnit"
-version = "0.0.0"
+version = "0.0.1"
 edition = "2021"
 repository = "https://github.com/gnostr-org/gnit.git"
 homepage = "https://github.com/gnostr-org/gnit.git"
@@ -8,7 +8,9 @@ documentation = "https://github.com/gnostr-org/gnit.git"
 description = "gnostr: git+nostr workflow utility"
 
 [dependencies]
+clap = { version = "4.5.18", features = ["derive"] }
 gnostr-bins = { version = "0.0.53", path = "vendor/gnostr-bins" }
+humantime = "2.1.0"
 
 # The profile that 'cargo dist' will build with
 [profile.dist]

@@ -21,10 +21,12 @@ help:## 	print verbose help
 
 all: libsecp256k1.a nostril docs## 	nostril docs
 
-.PHONY:docs
+.PHONY:docs doc/nostril.1
+doc: docs
 docs: doc/nostril.1## 	docs
 doc/nostril.1: README.md## 	doc/nostril.1
 	@scdoc < $^ > $@ || help2man ./nostril > doc/nostril.1 || $(MAKE) all
+	git commit doc -m "doc/nostril.1:update"
 
 version: nostril.c## 	version
 	@git fetch --all --tags -f
