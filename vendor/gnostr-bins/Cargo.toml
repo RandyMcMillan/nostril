@@ -38,11 +38,11 @@ readme = "README.md"
 keywords = ["gnostr"]
 categories = ["network-programming"]
 license = "Apache-2.0"
-repository = "https://github.com/gnostr-org/gnostr-bins"
+repository = "https://github.com/gnostr-org/gnit"
 
-[profile.dist]
-lto = "thin"
-inherits = "release"
+#[profile.dist]
+#lto = "thin"
+#inherits = "release"
 
 [lib]
 name = "gnostr_bins"

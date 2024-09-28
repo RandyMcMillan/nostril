@@ -1381,8 +1381,8 @@ dependencies = [
 ]
 
 [[package]]
-name = "gnostr"
-version = "0.0.54"
+name = "gnit"
+version = "0.0.0"
 dependencies = [
  "gnostr-bins",
 ]
