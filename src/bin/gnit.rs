@@ -155,11 +155,11 @@ mod tests {
     #[test]
     fn weeble_mod_blockheight() {
         let result = get_weeble() % get_blockheight();
-        assert_eq!(result % 1 as u8, 0);
+        assert_eq!(result % 1 as u64, 0);
     }
     #[test]
     fn blockheight_mod_weeble() {
         let result = get_blockheight() % get_weeble();
-        assert_eq!(result % 1 as u8, 0);
+        assert_eq!(result % 1 as u64, 0);
     }
 }
