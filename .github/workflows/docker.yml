@@ -76,7 +76,7 @@ jobs:
           key: ${{ runner.os }}-target
 
       - run: touch ~/GITHUB_TOKEN.txt
-      - run: git config --global --add safe.directory /__w/gnostr/gnostr || true
+      - run: git config --global --add safe.directory /__w/nostril/nostril || true
       - run: make detect | sudo make detect
       ## objective: non-cmake build/install
       - run: make all nostril install || sudo make all nostril install
