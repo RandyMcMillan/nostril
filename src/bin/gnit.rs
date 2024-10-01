@@ -107,12 +107,22 @@ fn main() -> Result<(), std::io::Error> {
 
     //CAUTION: hash_of_string is different than hash.as_bytes_mut!
     //TODO: gnostr-bins: add from_str and from_bytes
-    let hash_of_string_2001 = sha256::Hash::hash("2001".as_bytes());
-    println!("hash_of_string_2001={}", hash_of_string_2001);
+    let hash_of_string_2000 = sha256::Hash::hash("2000".as_bytes());
+    println!("hash_of_string_2000={}", hash_of_string_2000);
+    println!("hash_of_string_2000={:x}", hash_of_string_2000);
+
+    println!("get_weeble()={}", get_weeble());
+    println!("get_weeble_string()={}", get_weeble_string());
+
     let hash_of_weeble = sha256::Hash::hash(get_weeble().as_bytes_mut());
     println!("hash_of_weeble={}", hash_of_weeble);
+
+    let hash_of_weeble_string = sha256::Hash::hash(get_weeble_string().as_bytes());
+    println!("hash_of_weeble_string={}", hash_of_weeble_string);
+
     let hash_of_blockheight = sha256::Hash::hash(get_blockheight().as_bytes_mut());
     println!("hash_of_blockheight={}", hash_of_blockheight);
+
     let hash_of_wobble = sha256::Hash::hash(get_wobble().as_bytes_mut());
     println!("hash_of_wobble={}", hash_of_wobble);
 
@@ -140,6 +150,15 @@ pub fn get_blockheight() -> u64 {
 }
 pub fn get_wobble() -> u64 {
     wobble().unwrap() as u64
+}
+pub fn get_weeble_string() -> String {
+    format!("{}",weeble().unwrap())
+}
+pub fn get_blockheight_string() -> String {
+    format!("{}",blockheight().unwrap())
+}
+pub fn get_wobble_string() -> String {
+    format!("{}",wobble().unwrap())
 }
 pub fn xor<'a>(left: &'a [u8; 12], right: &'a [u8; 12]) -> u8 {
     &left[0] ^ &right[0]
