@@ -26,7 +26,7 @@ doc: docs
 docs: doc/nostril.1## 	docs
 doc/nostril.1: README.md## 	doc/nostril.1
 	@scdoc < $^ > $@ || help2man ./nostril > doc/nostril.1 || $(MAKE) all
-	git commit doc -m "doc/nostril.1:update"
+	git commit doc -m "doc/nostril.1:update" --allow-empty
 
 version: nostril.c## 	version
 	@git fetch --all --tags -f
