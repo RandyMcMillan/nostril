@@ -348,6 +348,9 @@ endif
 		$(SUDO) apt-get install python-is-python3 2>/dev/null || \
 		echo   "
 	bash -c "[ '$(shell uname -s)' == 'Linux' ] && \
+		$(SUDO) apt-get install scdoc             2>/dev/null || \
+		echo   "
+	bash -c "[ '$(shell uname -s)' == 'Linux' ] && \
 		$(SUDO) apt-get install tcl-dev           2>/dev/null || \
 		echo   "
 	bash -c "[ '$(shell uname -s)' == 'Linux' ] && \
