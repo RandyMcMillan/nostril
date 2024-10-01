@@ -217,7 +217,7 @@ fn test_invalid_decrypt() {
     let known_errors = [
         Error::UnsupportedFutureVersion,
         Error::UnknownVersion,
-        Error::Base64Decode(base64::DecodeError::InvalidLength),
+        Error::Base64Decode(base64::DecodeError::InvalidByte(2, 209)),
         Error::InvalidMac,
         Error::InvalidMac,
         Error::InvalidPadding,
@@ -311,7 +311,7 @@ fn bench_encryption_inner() {
             let encrypted = encrypt(&shared, &*message).unwrap();
             let _decrypted = decrypt(&shared, &*encrypted).unwrap();
         });
-     }
+    }
     let elapsed = start.elapsed();
     let total_nanos = elapsed.as_nanos();
     let nanos_per_roundtrip = total_nanos / rounds as u128;
@@ -330,4 +330,3 @@ fn bench_encryption_inner() {
         percharx10 % 10
     );
 }
-

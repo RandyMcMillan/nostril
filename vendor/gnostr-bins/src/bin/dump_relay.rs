@@ -1,7 +1,7 @@
 // TEMPORARILY
 #![allow(clippy::uninlined_format_args)]
 
-use gnostr_types::Filter;
+use nostr_types::Filter;
 use std::env;
 
 fn main() {

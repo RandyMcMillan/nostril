@@ -52,6 +52,22 @@ impl PrivateKey {
         }
     }
 
+    /// Decrypt (detects encryption version)
+    pub fn decrypt(&self, other: &PublicKey, ciphertext: &str) -> Result<String, Error> {
+        let cbytes = ciphertext.as_bytes();
+        if cbytes.len() >= 28
+            && cbytes[ciphertext.len() - 28] == b'?'
+            && cbytes[ciphertext.len() - 27] == b'i'
+            && cbytes[ciphertext.len() - 26] == b'v'
+            && cbytes[ciphertext.len() - 25] == b'='
+        {
+            self.decrypt_nip04(other, ciphertext)
+                .map(|bytes| String::from_utf8_lossy(&bytes).into_owned())
+        } else {
+            self.decrypt_nip44(other, ciphertext)
+        }
+    }
+
     /// Decrypt NIP-04 only
     pub fn decrypt_nip04(&self, other: &PublicKey, ciphertext: &str) -> Result<Vec<u8>, Error> {
         self.nip04_decrypt(other, ciphertext)
@@ -64,7 +80,12 @@ impl PrivateKey {
         };
 
         let algo = {
-            let bytes = base64::engine::general_purpose::STANDARD.decode(ciphertext)?;
+            let bytes = base64::engine::general_purpose::STANDARD
+                .decode(ciphertext)
+                .map_err(Error::BadEncryptedMessageBase64)?;
+            if bytes.is_empty() {
+                return Err(Error::BadEncryptedMessage);
+            }
             match bytes[0] {
                 1 => ContentEncryptionAlgorithm::Nip44v1Unpadded,
                 // Note: Nip44v1Padded cannot be detected, and there may be no events out there using it.
@@ -157,8 +178,12 @@ impl PrivateKey {
         if parts.len() != 2 {
             return Err(Error::BadEncryptedMessage);
         }
-        let ciphertext: Vec<u8> = base64::engine::general_purpose::STANDARD.decode(parts[0])?;
-        let iv_vec: Vec<u8> = base64::engine::general_purpose::STANDARD.decode(parts[1])?;
+        let ciphertext: Vec<u8> = base64::engine::general_purpose::STANDARD
+            .decode(parts[0])
+            .map_err(Error::BadEncryptedMessageBase64)?;
+        let iv_vec: Vec<u8> = base64::engine::general_purpose::STANDARD
+            .decode(parts[1])
+            .map_err(Error::BadEncryptedMessageBase64)?;
         let iv: [u8; 16] = iv_vec.try_into().unwrap();
 
         let mut shared_secret = self.shared_secret_nip04(other);
@@ -239,7 +264,9 @@ impl PrivateKey {
     ) -> Result<Vec<u8>, Error> {
         use chacha20::cipher::StreamCipher;
         let mut shared_secret = self.shared_secret_nip44_v1(other);
-        let bytes = base64::engine::general_purpose::STANDARD.decode(ciphertext)?;
+        let bytes = base64::engine::general_purpose::STANDARD
+            .decode(ciphertext)
+            .map_err(Error::BadEncryptedMessageBase64)?;
         if bytes[0] != 1 {
             return Err(Error::UnknownCipherVersion(bytes[0]));
         }

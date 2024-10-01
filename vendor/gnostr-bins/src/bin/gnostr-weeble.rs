@@ -137,7 +137,7 @@ use futures::executor::block_on;
 /// let weeble = gnostr_bins::get_weeble();
 ///
 /// print!("{}",weeble.unwrap());
-async fn print_weeble() {
+pub async fn print_weeble() {
     #[cfg(debug_assertions)]
     let start = std::time::SystemTime::now()
         .duration_since(std::time::SystemTime::UNIX_EPOCH)

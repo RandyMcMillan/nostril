@@ -5,29 +5,57 @@
 // those terms.
 
 #![allow(clippy::uninlined_format_args)]
-use gnostr_types::{PrivateKey, PublicKey};
 use k256::schnorr::SigningKey;
+use nostr_types::{PrivateKey, PublicKey};
 use zeroize::Zeroize;
 
 fn main() {
     let _buffer_min = &[
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 1,
+        0, 0,
     ];
+    #[cfg(debug_assertions)]
+    print!("{} ", _buffer_min.len());
     #[cfg(debug_assertions)]
     let _buffer_max = &[
         255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
         255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
     ];
+    #[cfg(debug_assertions)]
+    println!("{}", _buffer_max.len());
 
-    //let iter = _buffer_min.chunks_exact(1);
-    //for num in iter {
-    ////print!("{}", u8::from_le_bytes(num.try_into().unwrap()));
-    //}
-    //let iter = _buffer_max.chunks_exact(1);
-    //for num in iter {
-    ////print!("{}", u8::from_le_bytes(num.try_into().unwrap()));
-    //}
+    #[cfg(debug_assertions)]
+    let min_iter = _buffer_min.chunks_exact(1);
+    #[cfg(debug_assertions)]
+    for min_num in min_iter {
+        let max_iter = _buffer_max.chunks_exact(1);
+
+        for max_num in max_iter {
+            //print!("{} ", u8::from_le_bytes(min_num.try_into().unwrap()));
+            //print!("{} ", u8::from_le_bytes(max_num.try_into().unwrap()));
+            print!(
+                "{} ",
+                u8::from_le_bytes(min_num.try_into().unwrap())
+                    ^ u8::from_le_bytes(max_num.try_into().unwrap())
+            );
+        }
+    }
+
+    #[cfg(debug_assertions)]
+    //std::process::exit(0);
+    #[cfg(debug_assertions)]
+    //#[allow(unreachable_code)]
+    #[cfg(debug_assertions)]
+    println!("");
+
+    #[cfg(debug_assertions)]
+    let iter = _buffer_max.chunks_exact(1);
+    #[cfg(debug_assertions)]
+    for num in iter {
+        print!("{} ", u8::from_le_bytes(num.try_into().unwrap()));
+    }
+    #[cfg(debug_assertions)]
+    println!();
 
     let mut signing_key_vec: Vec<SigningKey> = Vec::new();
 
@@ -50,6 +78,7 @@ fn main() {
     signing_key_vec.push(SigningKey::from_bytes(_buffer_min).unwrap());
     #[cfg(debug_assertions)]
     signing_key_vec.push(SigningKey::from_bytes(_buffer_min).unwrap());
+
     let mut private_key =
         PrivateKey::try_from_hex_string(&format!("{:x}", signing_key_vec[0].to_bytes())).unwrap();
     let public_key = PublicKey::try_from_hex_string(
@@ -57,6 +86,7 @@ fn main() {
         true,
     )
     .unwrap();
+
     let verifying_key = signing_key_vec[2].verifying_key().clone();
     let mut private_bech32 = private_key.as_bech32_string();
     let mut public_bech32 = public_key.as_bech32_string();

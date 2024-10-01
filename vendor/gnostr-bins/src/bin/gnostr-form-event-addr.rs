@@ -1,6 +1,6 @@
 use std::env;
 
-use gnostr_types::{EventAddr, EventKind, NostrUrl, PublicKey, UncheckedUrl};
+use nostr_types::{EventKind, NAddr, NostrUrl, PublicKey, UncheckedUrl};
 
 fn main() {
     let mut args = env::args();
@@ -40,7 +40,7 @@ fn main() {
         relays.push(UncheckedUrl(r));
     }
 
-    let ea = EventAddr {
+    let ea = NAddr {
         d,
         author,
         kind,

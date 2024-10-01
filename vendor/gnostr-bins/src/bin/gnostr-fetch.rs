@@ -3,10 +3,9 @@
  *
  * Written by the libgit2 contributors
  *
- * To the extent possible under law, the author(s) have dedicated all
- * copyright and related and neighboring rights to this software to the
- * public domain worldwide. This software is distributed without any
- * warranty.
+ * To the extent possible under law, the author(s) have dedicated all copyright
+ * and related and neighboring rights to this software to the public domain
+ * worldwide. This software is distributed without any warranty.
  *
  * You should have received a copy of the CC0 Public Domain Dedication along
  * with this software. If not, see
@@ -15,13 +14,12 @@
 
 #![deny(warnings)]
 
+use clap::Parser;
+use git2::{AutotagOption, FetchOptions, RemoteCallbacks, RemoteUpdateFlags, Repository};
 use std::io::{self, Write};
 use std::str;
 
-use git2::{AutotagOption, FetchOptions, RemoteCallbacks, Repository};
-use structopt::StructOpt;
-
-#[derive(StructOpt)]
+#[derive(Parser)]
 struct Args {
     #[structopt(name = "remote")]
     arg_remote: Option<String>,
@@ -91,7 +89,8 @@ fn run(args: &Args) -> Result<(), git2::Error> {
         let stats = remote.stats();
         if stats.local_objects() > 0 {
             println!(
-                "\rReceived {}/{} objects in {} bytes (used {} local objects)",
+                "\rReceived {}/{} objects in {} bytes (used {} local \
+                 objects)",
                 stats.indexed_objects(),
                 stats.total_objects(),
                 stats.received_bytes(),
@@ -114,13 +113,18 @@ fn run(args: &Args) -> Result<(), git2::Error> {
     // commits. This may be needed even if there was no packfile to download,
     // which can happen e.g. when the branches have been changed but all the
     // needed objects are available locally.
-    remote.update_tips(None, true, AutotagOption::Unspecified, None)?;
+    remote.update_tips(
+        None,
+        RemoteUpdateFlags::UPDATE_FETCHHEAD,
+        AutotagOption::Unspecified,
+        None,
+    )?;
 
     Ok(())
 }
 
 fn main() {
-    let args = Args::from_args();
+    let args = Args::parse();
     match run(&args) {
         Ok(()) => {}
         Err(e) => println!("error: {}", e),

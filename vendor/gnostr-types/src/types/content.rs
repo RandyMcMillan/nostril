@@ -63,7 +63,8 @@ impl ShatteredContent {
     /// View a slice of the original content as specified in a Span
     #[allow(clippy::string_slice)] // the Span is trusted
     pub fn slice<'a>(&'a self, span: &Span) -> Option<&'a str> {
-        if span.end <= self.allocated.len() {
+        if self.allocated.is_char_boundary(span.start) && self.allocated.is_char_boundary(span.end)
+        {
             Some(&self.allocated[span.start..span.end])
         } else {
             None
@@ -185,5 +186,23 @@ And referencing this person nostr:npub1acg6thl5psv62405rljzkj8spesceyfz2c32udakc
         let content = content_str.to_string();
         let pieces = ShatteredContent::new(content);
         assert_eq!(pieces.segments.len(), 9);
+    }
+
+    #[test]
+    fn test_shatter_content_2() {
+        let content_str =
+            "Ein wunderschönes langes Wochenende auf der #zitadelle2024 geht zu Ende...
+🏰 #einundzwanzig
+Hier einige Impressionen mit opsec gewährten Bildern.
+Wonderful Long Weekend at a Zitadelle, Here Impressions opsec included
+ nostr:npub1vwf2mytkyk22x2gcmr9d7k";
+        let content = content_str.to_string();
+        let pieces = ShatteredContent::new(content);
+        assert_eq!(pieces.segments.len(), 2);
+        assert!(matches!(pieces.segments[0], ContentSegment::Plain(..)));
+        assert!(matches!(pieces.segments[1], ContentSegment::Plain(..))); // 223 - 256
+        if let ContentSegment::Plain(span) = pieces.segments[1] {
+            let _slice = pieces.slice(&span);
+        }
     }
 }

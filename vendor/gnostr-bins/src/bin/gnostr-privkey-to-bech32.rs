@@ -1,7 +1,4 @@
-// TEMPORARILY
-#![allow(clippy::uninlined_format_args)]
-
-use gnostr_types::PrivateKey;
+use nostr_types::PrivateKey;
 use zeroize::Zeroize;
 
 // The zeroize in here is really silly because we print it.

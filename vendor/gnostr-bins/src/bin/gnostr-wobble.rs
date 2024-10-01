@@ -138,11 +138,15 @@ use futures::executor::block_on;
 ///
 /// print!("{}",wobble.unwrap());
 async fn print_wobble() {
+    #[cfg(debug_assertions)]
     let start = std::time::SystemTime::now()
         .duration_since(std::time::SystemTime::UNIX_EPOCH)
         .expect("get millis error");
+    #[cfg(debug_assertions)]
     let seconds = start.as_secs();
+    #[cfg(debug_assertions)]
     let start_subsec_millis = start.subsec_millis() as u64;
+    #[cfg(debug_assertions)]
     let start_millis = seconds * 1000 + start_subsec_millis;
     #[cfg(debug_assertions)]
     println!("start_millis: {}", start_millis);
@@ -157,11 +161,15 @@ async fn print_wobble() {
     let wobble = gnostr_bins::get_wobble();
     print!("{}", wobble.unwrap());
 
+    #[cfg(debug_assertions)]
     let stop = std::time::SystemTime::now()
         .duration_since(std::time::SystemTime::UNIX_EPOCH)
         .expect("get millis error");
+    #[cfg(debug_assertions)]
     let seconds = stop.as_secs();
+    #[cfg(debug_assertions)]
     let stop_subsec_millis = stop.subsec_millis() as u64;
+    #[cfg(debug_assertions)]
     let stop_millis = seconds * 1000 + stop_subsec_millis;
     #[cfg(debug_assertions)]
     println!("\nstop_millis: {}", stop_millis);
@@ -173,6 +181,7 @@ async fn print_wobble() {
         "get_blockheight(): {}",
         gnostr_bins::get_blockheight().unwrap()
     );
+    #[cfg(debug_assertions)]
     println!("\ndelta_millis: {}", stop_millis - start_millis);
 }
 

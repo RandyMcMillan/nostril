@@ -21,7 +21,9 @@ pub async fn parse_json(urls_str: &str) -> Result<Vec<String>> {
         loop {
             match char_iter.next() {
                 Some(']') => {
+                    #[cfg(debug_assertions)]
                     print!("{{\"url\":\"wss://relay.gnostr.org\"}},");
+                    #[cfg(debug_assertions)]
                     print!("{{\"url\":\"wss://proxy.gnostr.org\"}}]");
                     return std::result::Result::Ok(collected);
                 }
@@ -54,7 +56,9 @@ pub async fn parse_urls(urls_str: &str) -> Result<Vec<String>> {
         loop {
             match char_iter.next() {
                 Some(']') => {
+                    #[cfg(debug_assertions)]
                     print!("wss://relay.gnostr.org, ");
+                    #[cfg(debug_assertions)]
                     print!("wss://proxy.gnostr.org");
                     return std::result::Result::Ok(collected);
                 }
@@ -84,7 +88,9 @@ pub async fn stripped_urls(urls_str: &str) -> Result<Vec<String>> {
         loop {
             match char_iter.next() {
                 Some(']') => {
+                    #[cfg(debug_assertions)]
                     print!("wss://relay.gnostr.org ");
+                    #[cfg(debug_assertions)]
                     print!("wss://proxy.gnostr.org ");
                     return std::result::Result::Ok(collected);
                 }

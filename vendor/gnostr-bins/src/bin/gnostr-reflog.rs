@@ -2,66 +2,8 @@ extern crate getopts;
 use std::{env, process};
 
 use getopts::Options;
-use git2::Repository;
-use gnostr_bins::get_pwd;
+use gnostr_bins::{get_pwd, hash_list, hash_list_padded, hash_list_w_commit_message};
 
-pub fn ref_hash_list_padded(_program: &str, _opts: &Options) -> Result<(), git2::Error> {
-    let repo = match Repository::open(".") {
-        Ok(repo) => repo,
-        Err(e) => panic!("Error opening repository: {}", e),
-    };
-
-    let mut revwalk = repo.revwalk()?;
-
-    revwalk.push_head()?;
-    revwalk.set_sorting(git2::Sort::TIME)?;
-
-    for rev in revwalk {
-        let commit = repo.find_commit(rev?)?;
-        println!("{:0>64}", commit.id());
-    }
-    Ok(())
-} //end ref_hash_list_padded
-pub fn ref_hash_list(_program: &str, _opts: &Options) -> Result<(), git2::Error> {
-    let repo = match Repository::open(".") {
-        Ok(repo) => repo,
-        Err(e) => panic!("Error opening repository: {}", e),
-    };
-
-    let mut revwalk = repo.revwalk()?;
-
-    revwalk.push_head()?;
-    revwalk.set_sorting(git2::Sort::TIME)?;
-
-    for rev in revwalk {
-        let commit = repo.find_commit(rev?)?;
-        println!("{:}", commit.id());
-    }
-    Ok(())
-} //end ref_hash_list
-
-pub fn ref_hash_list_w_commit_message(_program: &str, _opts: &Options) -> Result<(), git2::Error> {
-    //let brief = format!("Usage: {} FILE [options]", _program);
-    //print!("ref_hash_list_commit_message:\n{}", _opts.usage(&brief));
-    let repo = match Repository::open(".") {
-        Ok(repo) => repo,
-        Err(e) => panic!("Error opening repository: {}", e),
-    };
-
-    let mut revwalk = repo.revwalk()?;
-
-    revwalk.push_head()?;
-    revwalk.set_sorting(git2::Sort::TIME)?;
-
-    for rev in revwalk {
-        let commit = repo.find_commit(rev?)?;
-        let message = commit
-            .summary_bytes()
-            .unwrap_or_else(|| commit.message_bytes());
-        println!("{:0}\n{}", commit.id(), String::from_utf8_lossy(message));
-    }
-    Ok(())
-} //end ref_hash_list_w_commit_message
 mod std_input {
 
     extern crate getopts;
@@ -70,12 +12,10 @@ mod std_input {
     use ascii::AsciiChar;
     use getopts::Options;
 
-    use crate::ref_hash_list;
-
     #[allow(dead_code)]
     pub fn parse_input() {
         let args: Vec<String> = env::args().collect();
-        let program = args[0].clone();
+        let _program = args[0].clone();
 
         let mut opts = Options::new();
         opts.optopt("o", "output", "set output file name", "NAME");
@@ -181,26 +121,25 @@ mod std_input {
             if input.trim() == "PRIVKEY" {
                 println!("PRIVKEY={}", input);
             }
-            let _ = ref_hash_list(&program, &opts);
             process::exit(0);
         } //end else
     } //end if args.len() == 1
 } //end parse_input
 
-pub fn print_usage(program: &str, opts: &Options) {
-    let brief = format!("Usage: {} [options]", program);
+pub fn print_usage(_program: &str, opts: &Options) {
+    let brief = format!("Usage: {} [options]", _program);
     print!("{}", opts.usage(&brief));
     process::exit(0);
 }
-pub fn sec(program: &str, opts: &Options) {
-    let brief = format!("Usage: {} [options]", program);
+pub fn sec(_program: &str, opts: &Options) {
+    let brief = format!("Usage: {} [options]", _program);
     print!("sec:\n{}", opts.usage(&brief));
     process::exit(0);
 }
-pub fn hash(program: &str, opts: &Options) {
+pub fn hash(_program: &str, opts: &Options) {
     //hash a following value
     //TODO detect stream or file
-    let brief = format!("Usage: {} [options]", program);
+    let brief = format!("Usage: {} [options]", _program);
     print!("hash:\n{}", opts.usage(&brief));
     process::exit(0);
 }
@@ -223,7 +162,7 @@ pub fn main() -> Result<(), git2::Error> {
     // --relay wss://relay.damus.io ;done
 
     let args: Vec<String> = env::args().collect();
-    let program = args[0].clone();
+    let _program = args[0].clone();
     //REF: https://docs.rs/getopts/latest/getopts/struct.Options.html
     let mut opts = Options::new();
 
@@ -240,18 +179,18 @@ pub fn main() -> Result<(), git2::Error> {
             }
         };
         if matches.opt_present("h") {
-            print_usage(&program, &opts);
+            print_usage(&_program, &opts);
             process::exit(0);
         }
         if matches.opt_present("p") {
-            gnostr_bins::hash_list_padded();
+            hash_list_padded();
             process::exit(0);
         }
         if matches.opt_present("m") {
-            gnostr_bins::hash_list_w_commit_message();
+            hash_list_w_commit_message();
             process::exit(0);
         } else {
-            gnostr_bins::hash_list();
+            hash_list();
             process::exit(0);
         }
     };

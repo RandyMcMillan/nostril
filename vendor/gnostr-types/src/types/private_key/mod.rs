@@ -1,7 +1,7 @@
-use crate::{Error, Id, PublicKey, Signature};
-use bech32::{FromBase32, ToBase32};
+use crate::{Error, Id, PublicKey, Signature, Signer};
 use rand_core::OsRng;
 use std::convert::TryFrom;
+use std::fmt;
 
 mod encrypted_private_key;
 pub use encrypted_private_key::*;
@@ -36,6 +36,9 @@ pub enum KeySecurity {
     /// scan memory. Additionally, more advanced techniques can get at your key such
     /// as hardware attacks like spectre, rowhammer, and power analysis.
     Medium = 1,
+
+    /// Not tracked
+    NotTracked = 2,
 }
 
 impl TryFrom<u8> for KeySecurity {
@@ -46,6 +49,8 @@ impl TryFrom<u8> for KeySecurity {
             Ok(KeySecurity::Weak)
         } else if i == 1 {
             Ok(KeySecurity::Medium)
+        } else if i == 2 {
+            Ok(KeySecurity::NotTracked)
         } else {
             Err(Error::UnknownKeySecurity(i))
         }
@@ -62,6 +67,12 @@ impl Default for PrivateKey {
     }
 }
 
+impl fmt::Debug for PrivateKey {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "PRIVATE-KEY-ELIDED")
+    }
+}
+
 impl PrivateKey {
     /// Generate a new `PrivateKey` (which can be used to get the `PublicKey`)
     #[inline]
@@ -71,7 +82,15 @@ impl PrivateKey {
 
     /// Generate a new `PrivateKey` (which can be used to get the `PublicKey`)
     pub fn generate() -> PrivateKey {
-        let secret_key = secp256k1::SecretKey::new(&mut OsRng);
+        let mut secret_key;
+        loop {
+            secret_key = secp256k1::SecretKey::new(&mut OsRng);
+            let (_, parity) = secret_key.x_only_public_key(secp256k1::SECP256K1);
+            if parity == secp256k1::Parity::Even {
+                break;
+            }
+        }
+
         PrivateKey(secret_key, KeySecurity::Medium)
     }
 
@@ -113,12 +132,8 @@ impl PrivateKey {
     /// with `KeySecurity::Weak` if you execute this.
     pub fn as_bech32_string(&mut self) -> String {
         self.1 = KeySecurity::Weak;
-        bech32::encode(
-            "nsec",
-            self.0.secret_bytes().as_slice().to_base32(),
-            bech32::Variant::Bech32,
-        )
-        .unwrap()
+        bech32::encode::<bech32::Bech32>(*crate::HRP_NSEC, self.0.secret_bytes().as_slice())
+            .unwrap()
     }
 
     /// Import from a bech32 encoded string
@@ -127,15 +142,22 @@ impl PrivateKey {
     /// `import_encrypted()` for `KeySecurity::Medium`
     pub fn try_from_bech32_string(s: &str) -> Result<PrivateKey, Error> {
         let data = bech32::decode(s)?;
-        if data.0 != "nsec" {
-            Err(Error::WrongBech32("nsec".to_string(), data.0))
+        if data.0 != *crate::HRP_NSEC {
+            Err(Error::WrongBech32(
+                crate::HRP_NSEC.to_lowercase(),
+                data.0.to_lowercase(),
+            ))
         } else {
-            let decoded = Vec::<u8>::from_base32(&data.1)?;
             Ok(PrivateKey(
-                secp256k1::SecretKey::from_slice(&decoded)?,
+                secp256k1::SecretKey::from_slice(&data.1)?,
                 KeySecurity::Weak,
             ))
         }
+    }
+
+    /// As a `secp256k1::SecretKey`
+    pub fn as_secret_key(&self) -> secp256k1::SecretKey {
+        self.0
     }
 
     /// Sign a 32-bit hash
@@ -147,9 +169,10 @@ impl PrivateKey {
 
     /// Sign a message (this hashes with SHA-256 first internally)
     pub fn sign(&self, message: &[u8]) -> Result<Signature, Error> {
-        use secp256k1::hashes::sha256;
+        use secp256k1::hashes::{sha256, Hash};
         let keypair = secp256k1::Keypair::from_secret_key(secp256k1::SECP256K1, &self.0);
-        let message = secp256k1::Message::from_hashed_data::<sha256::Hash>(message);
+        let hash = sha256::Hash::hash(message).to_byte_array();
+        let message = secp256k1::Message::from_digest(hash);
         Ok(Signature(keypair.sign_schnorr(message)))
     }
 
@@ -163,6 +186,84 @@ impl PrivateKey {
 impl Drop for PrivateKey {
     fn drop(&mut self) {
         self.0.non_secure_erase();
+    }
+}
+
+impl Signer for PrivateKey {
+    fn is_locked(&self) -> bool {
+        false
+    }
+
+    fn unlock(&mut self, _password: &str) -> Result<(), Error> {
+        Ok(())
+    }
+
+    fn lock(&mut self) {}
+
+    fn change_passphrase(&mut self, _old: &str, _new: &str, _log_n: u8) -> Result<(), Error> {
+        Err(Error::InvalidOperation)
+    }
+
+    fn upgrade(&mut self, _pass: &str, _log_n: u8) -> Result<(), Error> {
+        Err(Error::InvalidOperation)
+    }
+
+    fn public_key(&self) -> PublicKey {
+        self.public_key()
+    }
+
+    fn encrypted_private_key(&self) -> Option<&EncryptedPrivateKey> {
+        None
+    }
+
+    fn export_private_key_in_hex(
+        &mut self,
+        _pass: &str,
+        _log_n: u8,
+    ) -> Result<(String, bool), Error> {
+        Ok((self.as_hex_string(), false))
+    }
+
+    fn export_private_key_in_bech32(
+        &mut self,
+        _pass: &str,
+        _log_n: u8,
+    ) -> Result<(String, bool), Error> {
+        Ok((self.as_bech32_string(), false))
+    }
+
+    fn sign_id(&self, id: Id) -> Result<Signature, Error> {
+        self.sign_id(id)
+    }
+
+    fn sign(&self, message: &[u8]) -> Result<Signature, Error> {
+        self.sign(message)
+    }
+
+    fn encrypt(
+        &self,
+        other: &PublicKey,
+        plaintext: &str,
+        algo: ContentEncryptionAlgorithm,
+    ) -> Result<String, Error> {
+        self.encrypt(other, plaintext, algo)
+    }
+
+    /// Decrypt NIP-44
+    fn decrypt(&self, other: &PublicKey, ciphertext: &str) -> Result<String, Error> {
+        self.decrypt(other, ciphertext)
+    }
+
+    /// Get NIP-44 conversation key
+    fn nip44_conversation_key(&self, other: &PublicKey) -> Result<[u8; 32], Error> {
+        Ok(nip44::get_conversation_key(
+            self.0,
+            other.as_xonly_public_key(),
+        ))
+    }
+
+    fn key_security(&self) -> Result<KeySecurity, Error> {
+        Ok(KeySecurity::NotTracked)
     }
 }
 

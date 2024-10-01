@@ -1,5 +1,4 @@
-use bech32::FromBase32;
-use gnostr_types::{NostrBech32, PrivateKey};
+use nostr_types::{NostrBech32, PrivateKey};
 use std::env;
 
 fn main() {
@@ -11,37 +10,37 @@ fn main() {
     };
     let bech32 = bech32.trim();
 
-    if let Some(nb32) = NostrBech32::try_from_string(&bech32) {
+    if let Some(nb32) = NostrBech32::try_from_string(bech32) {
         match nb32 {
-            NostrBech32::EventAddr(ea) => {
+            NostrBech32::NAddr(na) => {
                 println!("Event Address:");
-                println!("  d={}", ea.d);
+                println!("  d={}", na.d);
                 println!(
                     "  relays={}",
-                    ea.relays
+                    na.relays
                         .iter()
                         .map(|r| r.as_str().to_owned())
                         .collect::<Vec<String>>()
                         .join(", ")
                 );
-                println!("  kind={}", Into::<u32>::into(ea.kind));
-                println!("  author={}", ea.author.as_hex_string());
+                println!("  kind={}", Into::<u32>::into(na.kind));
+                println!("  author={}", na.author.as_hex_string());
             }
-            NostrBech32::EventPointer(ep) => {
+            NostrBech32::NEvent(ne) => {
                 println!("Event Pointer:");
-                println!("  id={}", ep.id.as_hex_string());
+                println!("  id={}", ne.id.as_hex_string());
                 println!(
                     "  relays={}",
-                    ep.relays
+                    ne.relays
                         .iter()
                         .map(|r| r.as_str().to_owned())
                         .collect::<Vec<String>>()
                         .join(", ")
                 );
-                if let Some(kind) = ep.kind {
+                if let Some(kind) = ne.kind {
                     println!("  kind={}", Into::<u32>::into(kind));
                 }
-                if let Some(author) = ep.author {
+                if let Some(author) = ne.author {
                     println!("  author={}", author.as_hex_string());
                 }
             }
@@ -67,13 +66,13 @@ fn main() {
             NostrBech32::Relay(url) => {
                 println!("Relay URL: {}", url.0);
             }
+            NostrBech32::CryptSec(_) => todo!(),
         }
     } else if let Ok(mut key) = PrivateKey::try_from_bech32_string(bech32) {
         println!("Private Key: {}", key.as_hex_string());
     } else {
-        let data = bech32::decode(bech32).unwrap();
-        println!("DATA.0 = {}", data.0);
-        let decoded = Vec::<u8>::from_base32(&data.1).unwrap();
-        println!("DATA.1 = {}", String::from_utf8_lossy(&decoded));
+        let (hrp, data) = bech32::decode(bech32).unwrap();
+        println!("HRP = {}", hrp);
+        println!("DATA = \"{:?}\"", String::from_utf8_lossy(&data));
     }
 }

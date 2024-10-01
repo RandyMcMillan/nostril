@@ -11,38 +11,30 @@
 
 [package]
 edition = "2021"
-rust-version = "1.79"
 name = "gnostr-bins"
-version = "0.0.53"
+version = "0.0.63"
 authors = [
-    "gnostr <admin@gnostr.org>",
+    "gnostr admin@gnostr.org",
     "Mike Dilger <mike@mikedilger.com>",
-    "DanConwayDev <DanConwayDev@protonmail.com>",
-    "Max Inden <mail@max-inden.de>",
-    "fiatjaf <fiatjaf@gmail.com>",
-    "Nate Levin <natelevincycling@gmail.com>",
-    "Nethanja Focking <nethanja@nethanja.de>",
-    "Daniele Tonon <tonon@vitamino.it>",
-    "jeremyd (@jeremyd)",
-    "Sebastian Thiel <sebastian.thiel@icloud.com>",
 ]
-build = false
+build = "build.rs"
 autobins = false
 autoexamples = false
 autotests = false
 autobenches = false
-description = "git+nostr workflow utility"
+description = "gnostr: a git+nostr workflow utility"
 homepage = "https://github.com/gnostr-org/gnostr-bins"
-documentation = "https://github.com/gnostr-org/gnostr/bins"
 readme = "README.md"
-keywords = ["gnostr"]
-categories = ["network-programming"]
-license = "Apache-2.0"
-repository = "https://github.com/gnostr-org/gnit"
+keywords = [
+    "gnostr",
+    "nostr",
+]
+license = "MIT"
+repository = "https://github.com/gnostr-org/gnostr-bins"
 
-#[profile.dist]
-#lto = "thin"
-#inherits = "release"
+[profile.dist]
+lto = "thin"
+inherits = "release"
 
 [lib]
 name = "gnostr_bins"
@@ -53,12 +45,32 @@ name = "bech32_to_any"
 path = "src/bin/bech32_to_any.rs"
 
 [[bin]]
+name = "create_event"
+path = "src/bin/create_event.rs"
+
+[[bin]]
+name = "create_event_raw"
+path = "src/bin/create_event_raw.rs"
+
+[[bin]]
+name = "create_giftwrap"
+path = "src/bin/create_giftwrap.rs"
+
+[[bin]]
+name = "create_nevent"
+path = "src/bin/create_nevent.rs"
+
+[[bin]]
 name = "decrypt_private_key"
 path = "src/bin/decrypt_private_key.rs"
 
 [[bin]]
 name = "dump_relay"
 path = "src/bin/dump_relay.rs"
+
+[[bin]]
+name = "dump_relay_with_login"
+path = "src/bin/dump_relay_with_login.rs"
 
 [[bin]]
 name = "encrypt_private_key"
@@ -73,8 +85,24 @@ name = "fetch_by_id"
 path = "src/bin/fetch_by_id.rs"
 
 [[bin]]
+name = "fetch_by_id_with_login"
+path = "src/bin/fetch_by_id_with_login.rs"
+
+[[bin]]
 name = "fetch_by_kind_and_author"
 path = "src/bin/fetch_by_kind_and_author.rs"
+
+[[bin]]
+name = "fetch_by_kind_and_author_limit"
+path = "src/bin/fetch_by_kind_and_author_limit.rs"
+
+[[bin]]
+name = "fetch_by_kind_and_author_with_login"
+path = "src/bin/fetch_by_kind_and_author_with_login.rs"
+
+[[bin]]
+name = "fetch_giftwraps"
+path = "src/bin/fetch_giftwraps.rs"
 
 [[bin]]
 name = "fetch_metadata"
@@ -89,8 +117,8 @@ name = "fetch_relay_list"
 path = "src/bin/fetch_relay_list.rs"
 
 [[bin]]
-name = "form_event_addr"
-path = "src/bin/form_event_addr.rs"
+name = "form_naddr"
+path = "src/bin/form_naddr.rs"
 
 [[bin]]
 name = "generate_keypair"
@@ -107,6 +135,10 @@ path = "src/bin/gnostr-bech32-to-any.rs"
 [[bin]]
 name = "gnostr-blame"
 path = "src/bin/gnostr-blame.rs"
+
+[[bin]]
+name = "gnostr-blockhash"
+path = "src/bin/gnostr-blockhash.rs"
 
 [[bin]]
 name = "gnostr-blockheight"
@@ -189,16 +221,12 @@ name = "gnostr-get-relays"
 path = "src/bin/gnostr-get-relays.rs"
 
 [[bin]]
+name = "gnostr-hash"
+path = "src/bin/gnostr-hash.rs"
+
+[[bin]]
 name = "gnostr-init"
 path = "src/bin/gnostr-init.rs"
-
-[[bin]]
-name = "gnostr-legit"
-path = "src/bin/gnostr-legit.rs"
-
-[[bin]]
-name = "gnostr-log"
-path = "src/bin/gnostr-log.rs"
 
 [[bin]]
 name = "gnostr-ls-remote"
@@ -269,8 +297,20 @@ name = "gnostr-wobble"
 path = "src/bin/gnostr-wobble.rs"
 
 [[bin]]
+name = "gnostr-xor"
+path = "src/bin/gnostr-xor.rs"
+
+[[bin]]
+name = "id_to_bech32"
+path = "src/bin/id_to_bech32.rs"
+
+[[bin]]
 name = "post_event"
 path = "src/bin/post_event.rs"
+
+[[bin]]
+name = "post_from_files"
+path = "src/bin/post_from_files.rs"
 
 [[bin]]
 name = "privkey_to_bech32"
@@ -281,11 +321,20 @@ name = "pubkey_to_bech32"
 path = "src/bin/pubkey_to_bech32.rs"
 
 [[bin]]
+name = "test_nip46"
+path = "src/bin/test_nip46.rs"
+
+[[bin]]
+name = "test_relay"
+path = "src/bin/test_relay.rs"
+
+[[bin]]
+name = "verify_event"
+path = "src/bin/verify_event.rs"
+
+[[bin]]
 name = "verify_keypair"
 path = "src/bin/verify_keypair.rs"
-
-[dependencies.argparse]
-version = "0.2.2"
 
 [dependencies.ascii]
 version = "1.1.0"
@@ -294,34 +343,45 @@ version = "1.1.0"
 version = "0.21"
 
 [dependencies.bech32]
-version = "0.9"
+version = "0.11"
 
-[dependencies.chrono]
-version = "0.4.34"
-features = ["serde"]
+[dependencies.bitcoin_hashes]
+version = "0.14.0"
+
+[dependencies.cfg-if]
+version = "1.0.0"
+
+[dependencies.clap]
+version = "4.5.18"
+features = ["derive"]
+
+[dependencies.colorful]
+version = "0.2"
+
+[dependencies.dirs]
+version = "5.0"
 
 [dependencies.futures]
-version = "0.3.6"
-features = [
-    "async-await",
-    "futures-executor",
-]
+version = "0.3.30"
+
+[dependencies.futures-util]
+version = "0.3"
 
 [dependencies.getopts]
 version = "0.2.21"
 
 [dependencies.git2]
-version = "^0.18"
+version = "0.19.0"
 
-[dependencies.gnostr-types]
-version = "0.7.0-unstable"
-features = ["speedy"]
+[dependencies.gnip44]
+version = "0.0.63"
+package = "gnip44"
 
 [dependencies.hex]
 version = "0.4"
 
 [dependencies.http]
-version = "0.2"
+version = "1.1"
 
 [dependencies.k256]
 version = "0.13"
@@ -330,19 +390,24 @@ features = [
     "ecdh",
 ]
 
+[dependencies.lazy_static]
+version = "1.4"
+
+[dependencies.lightning]
+version = "0.0.123-beta"
+
 [dependencies.log]
-version = "0.4.21"
+version = "0.4.22"
+
+[dependencies.nostr-types]
+version = "0.0.63"
+package = "gnostr-types"
 
 [dependencies.num-bigint]
-version = "0.4.4"
-
-[dependencies.pad]
-version = "0.1.6"
+version = "0.4.6"
 
 [dependencies.rand]
-version = "0.7.3"
-features = ["std"]
-default-features = false
+version = "0.8"
 
 [dependencies.rand_core]
 version = "0.6"
@@ -359,8 +424,14 @@ default-features = false
 [dependencies.rpassword]
 version = "7.2"
 
-[dependencies.rust-crypto]
-version = "0.2.36"
+[dependencies.secp256k1]
+version = "0.29"
+features = [
+    "hashes",
+    "global-context",
+    "rand-std",
+    "serde",
+]
 
 [dependencies.serde]
 version = "1.0"
@@ -369,25 +440,27 @@ features = ["derive"]
 [dependencies.serde_json]
 version = "1.0"
 
-[dependencies.sha2]
-version = "0.10.8"
-
 [dependencies.sha256]
-version = "1.2.2"
+version = "1.5.0"
 
 [dependencies.structopt]
 version = "0.3.26"
 
-[dependencies.time]
-version = "0.1.42"
+[dependencies.tokio]
+version = "1"
+features = ["full"]
+
+[dependencies.tokio-tungstenite]
+version = "0.21"
+features = [
+    "connect",
+    "handshake",
+    "rustls-tls-webpki-roots",
+]
 
 [dependencies.tungstenite]
-version = "0.18"
+version = "0.21"
 features = ["rustls-tls-webpki-roots"]
-
-[dependencies.url]
-version = "2.5.0"
-features = ["serde"]
 
 [dependencies.zeroize]
 version = "1.5"

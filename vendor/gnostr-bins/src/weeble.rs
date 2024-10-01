@@ -2,8 +2,10 @@ use std::io::Read;
 use std::time::SystemTime;
 
 use reqwest::Url;
-
+/// pub fn weeble() -> Result<f64, ascii::AsciiChar>
+///
 pub fn weeble() -> Result<f64, ascii::AsciiChar> {
+    //! weeble = utc_secs / blockheight
     let since_the_epoch = SystemTime::now()
         .duration_since(SystemTime::UNIX_EPOCH)
         .expect("get millis error");

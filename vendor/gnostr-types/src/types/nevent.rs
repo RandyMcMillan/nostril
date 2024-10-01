@@ -1,6 +1,5 @@
 use super::{EventKind, Id, PublicKey, UncheckedUrl};
 use crate::Error;
-use bech32::{FromBase32, ToBase32};
 use serde::{Deserialize, Serialize};
 #[cfg(feature = "speedy")]
 use speedy::{Readable, Writable};
@@ -8,7 +7,7 @@ use speedy::{Readable, Writable};
 /// An 'nevent': event id along with some relays in which that event may be found.
 #[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
 #[cfg_attr(feature = "speedy", derive(Readable, Writable))]
-pub struct EventPointer {
+pub struct NEvent {
     /// Event id
     pub id: Id,
 
@@ -26,7 +25,7 @@ pub struct EventPointer {
     pub author: Option<PublicKey>,
 }
 
-impl EventPointer {
+impl NEvent {
     /// Export as a bech32 encoded string ("nevent")
     pub fn as_bech32_string(&self) -> String {
         // Compose
@@ -40,8 +39,9 @@ impl EventPointer {
         // Push relays
         for relay in &self.relays {
             tlv.push(1); // type 'relay'
-            tlv.push(relay.0.len() as u8); // the length of the string
-            tlv.extend(relay.0.as_bytes());
+            let len = relay.0.len() as u8;
+            tlv.push(len); // the length of the string
+            tlv.extend(relay.0[..len as usize].as_bytes());
         }
 
         // Maybe Push kind
@@ -60,21 +60,24 @@ impl EventPointer {
             tlv.extend(pubkey.as_bytes());
         }
 
-        bech32::encode("nevent", tlv.to_base32(), bech32::Variant::Bech32).unwrap()
+        bech32::encode::<bech32::Bech32>(*crate::HRP_NEVENT, &tlv).unwrap()
     }
 
     /// Import from a bech32 encoded string ("nevent")
-    pub fn try_from_bech32_string(s: &str) -> Result<EventPointer, Error> {
+    pub fn try_from_bech32_string(s: &str) -> Result<NEvent, Error> {
         let data = bech32::decode(s)?;
-        if data.0 != "nevent" {
-            Err(Error::WrongBech32("nevent".to_string(), data.0))
+        if data.0 != *crate::HRP_NEVENT {
+            Err(Error::WrongBech32(
+                crate::HRP_NEVENT.to_lowercase(),
+                data.0.to_lowercase(),
+            ))
         } else {
             let mut relays: Vec<UncheckedUrl> = Vec::new();
             let mut id: Option<Id> = None;
             let mut kind: Option<EventKind> = None;
             let mut author: Option<PublicKey> = None;
 
-            let tlv = Vec::<u8>::from_base32(&data.1)?;
+            let tlv = data.1;
             let mut pos = 0;
             loop {
                 // we need at least 2 more characters for anything meaningful
@@ -92,7 +95,7 @@ impl EventPointer {
                     0 => {
                         // special (32 bytes of id)
                         if len != 32 {
-                            return Err(Error::InvalidEventPointer);
+                            return Err(Error::InvalidNEvent);
                         }
                         id = Some(Id(raw
                             .try_into()
@@ -106,7 +109,13 @@ impl EventPointer {
                     }
                     2 => {
                         // author
-                        author = Some(PublicKey::from_bytes(raw, true)?);
+                        //
+                        // Don't fail if the pubkey is bad, just don't include it.
+                        // Some client is generating these, and we want to tolerate it
+                        // as much as we can.
+                        if let Ok(pk) = PublicKey::from_bytes(raw, true) {
+                            author = Some(pk);
+                        }
                     }
                     3 => {
                         // kind
@@ -120,27 +129,27 @@ impl EventPointer {
                 pos += len;
             }
             if let Some(id) = id {
-                Ok(EventPointer {
+                Ok(NEvent {
                     id,
                     relays,
                     kind,
                     author,
                 })
             } else {
-                Err(Error::InvalidEventPointer)
+                Err(Error::InvalidNEvent)
             }
         }
     }
 
     // Mock data for testing
     #[allow(dead_code)]
-    pub(crate) fn mock() -> EventPointer {
+    pub(crate) fn mock() -> NEvent {
         let id = Id::try_from_hex_string(
             "b0635d6a9851d3aed0cd6c495b282167acf761729078d975fc341b22650b07b9",
         )
         .unwrap();
 
-        EventPointer {
+        NEvent {
             id,
             relays: vec![
                 UncheckedUrl::from_str("wss://relay.example.com"),
@@ -156,21 +165,21 @@ impl EventPointer {
 mod test {
     use super::*;
 
-    test_serde! {EventPointer, test_event_pointer_serde}
+    test_serde! {NEvent, test_nevent_serde}
 
     #[test]
     fn test_profile_bech32() {
-        let bech32 = EventPointer::mock().as_bech32_string();
+        let bech32 = NEvent::mock().as_bech32_string();
         println!("{bech32}");
         assert_eq!(
-            EventPointer::mock(),
-            EventPointer::try_from_bech32_string(&bech32).unwrap()
+            NEvent::mock(),
+            NEvent::try_from_bech32_string(&bech32).unwrap()
         );
     }
 
     #[test]
     fn test_nip19_example() {
-        let event_pointer = EventPointer {
+        let nevent = NEvent {
             id: Id::try_from_hex_string(
                 "3bf0c63fcb93463407af97a5e5ee64fa883d107ef9e558472c4eb9aaaefa459d",
             )
@@ -187,24 +196,21 @@ mod test {
         let bech32 = "nevent1qqsrhuxx8l9ex335q7he0f09aej04zpazpl0ne2cgukyawd24mayt8gpp4mhxue69uhhytnc9e3k7mgpz4mhxue69uhkg6nzv9ejuumpv34kytnrdaks343fay";
 
         // Try converting profile to bech32
-        assert_eq!(event_pointer.as_bech32_string(), bech32);
+        assert_eq!(nevent.as_bech32_string(), bech32);
 
         // Try converting bech32 to profile
-        assert_eq!(
-            event_pointer,
-            EventPointer::try_from_bech32_string(bech32).unwrap()
-        );
+        assert_eq!(nevent, NEvent::try_from_bech32_string(bech32).unwrap());
 
         // Try this one that used to fail
         let bech32 =
             "nevent1qqstxx3lk7zqfyn8cyyptvujfxq9w6mad4205x54772tdkmyqaay9scrqsqqqpp8x4vwhf";
-        let _ = EventPointer::try_from_bech32_string(bech32).unwrap();
+        let _ = NEvent::try_from_bech32_string(bech32).unwrap();
         // it won't be equal, but should have the basics and should not error.
     }
 
     #[test]
-    fn test_event_pointer_alt_fields() {
-        let event_pointer = EventPointer {
+    fn test_nevent_alt_fields() {
+        let nevent = NEvent {
             id: Id::try_from_hex_string(
                 "3bf0c63fcb93463407af97a5e5ee64fa883d107ef9e558472c4eb9aaaefa459d",
             )
@@ -227,12 +233,16 @@ mod test {
         let bech32 = "nevent1qqsrhuxx8l9ex335q7he0f09aej04zpazpl0ne2cgukyawd24mayt8gpp4mhxue69uhhytnc9e3k7mgpz4mhxue69uhkg6nzv9ejuumpv34kytnrdaksxpqqqqqqzq3qqqqqqqqrxtrcx8vut2vlrqa0c2qn5mmf59hdmflkls8dsyg9vmnqu25v0j";
 
         // Try converting profile to bech32
-        assert_eq!(event_pointer.as_bech32_string(), bech32);
+        assert_eq!(nevent.as_bech32_string(), bech32);
 
         // Try converting bech32 to profile
-        assert_eq!(
-            event_pointer,
-            EventPointer::try_from_bech32_string(bech32).unwrap()
-        );
+        assert_eq!(nevent, NEvent::try_from_bech32_string(bech32).unwrap());
+    }
+
+    #[test]
+    fn test_ones_that_were_failing() {
+        let bech32 = "nevent1qqswrqr63ddwk8l3zfqrgdxh2lxh2jlcxl36k3h33g25gtchzchx8agpp4mhxue69uhkummn9ekx7mqpz3mhxue69uhhyetvv9ujuerpd46hxtnfduq3yamnwvaz7tm0venxx6rpd9hzuur4vgpyqdmyxs6rzdmyx4jxvdpnx4snjdmz8pnr2dtr8pnryefhv5ex2e34xvek2v3nxuckxef4v5ckxenxvs6njdtrxymnjcfnv4skvvekvs6qfe99uy";
+
+        let _ne = NEvent::try_from_bech32_string(bech32).unwrap();
     }
 }

@@ -1,3 +1,4 @@
+use super::{FeeV1, RelayFeesV1, RelayRetentionV1};
 use crate::types::{EventKind, EventKindOrRange, PublicKeyHex, Url};
 //use serde::de::Error as DeError;
 use serde::de::{Deserializer, MapAccess, Visitor};
@@ -11,7 +12,7 @@ use std::fmt;
 /// Relay limitations
 #[derive(Clone, Copy, Debug, Deserialize, Eq, PartialEq, Serialize)]
 #[cfg_attr(feature = "speedy", derive(Readable, Writable))]
-pub struct RelayLimitationV1 {
+pub struct RelayLimitationV2 {
     /// max message length
     #[serde(skip_serializing_if = "Option::is_none")]
     #[serde(default)]
@@ -61,9 +62,24 @@ pub struct RelayLimitationV1 {
     #[serde(skip_serializing_if = "Option::is_none")]
     #[serde(default)]
     pub payment_required: Option<bool>,
+
+    /// restricted writes
+    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default)]
+    pub restricted_writes: Option<bool>,
+
+    /// created at lower limit
+    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default)]
+    pub created_at_lower_limit: Option<u64>,
+
+    /// created at upper limit
+    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default)]
+    pub created_at_upper_limit: Option<u64>,
 }
 
-impl fmt::Display for RelayLimitationV1 {
+impl fmt::Display for RelayLimitationV2 {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "Relay Limitation:")?;
         if let Some(mml) = &self.max_message_length {
@@ -96,118 +112,22 @@ impl fmt::Display for RelayLimitationV1 {
         if let Some(pr) = &self.payment_required {
             write!(f, " PaymentRequired=\"{pr}\"")?;
         }
-        Ok(())
-    }
-}
-
-/// Relay retention
-#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
-#[cfg_attr(feature = "speedy", derive(Readable, Writable))]
-pub struct RelayRetentionV1 {
-    /// kinds
-    #[serde(skip_serializing_if = "Vec::is_empty")]
-    #[serde(default)]
-    pub kinds: Vec<EventKindOrRange>,
-
-    /// time
-    #[serde(skip_serializing_if = "Option::is_none")]
-    #[serde(default)]
-    pub time: Option<usize>,
-
-    /// count
-    #[serde(skip_serializing_if = "Option::is_none")]
-    #[serde(default)]
-    pub count: Option<usize>,
-}
-
-impl fmt::Display for RelayRetentionV1 {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "Relay Retention:")?;
-        write!(f, " Kinds=\"{:?}\"", self.kinds)?;
-        if let Some(time) = &self.time {
-            write!(f, " Time=\"{time}\"")?;
+        if let Some(rw) = &self.restricted_writes {
+            write!(f, " RestrictedWrites=\"{rw}\"")?;
         }
-        if let Some(count) = &self.count {
-            write!(f, " Count=\"{count}\"")?;
+        if let Some(call) = &self.created_at_lower_limit {
+            write!(f, " CreatedAtLowerLimit=\"{call}\"")?;
+        }
+        if let Some(caul) = &self.created_at_upper_limit {
+            write!(f, " CreatedAtUpperLimit=\"{caul}\"")?;
         }
         Ok(())
-    }
-}
-
-/// Fee
-#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
-#[cfg_attr(feature = "speedy", derive(Readable, Writable))]
-pub struct FeeV1 {
-    /// Amount of the fee
-    pub amount: usize,
-
-    /// Unit of the amount
-    pub unit: String,
-
-    /// Kinds of events
-    #[serde(skip_serializing_if = "Vec::is_empty")]
-    #[serde(default)]
-    pub kinds: Vec<EventKindOrRange>,
-
-    /// Period purchase lasts for
-    #[serde(skip_serializing_if = "Option::is_none")]
-    #[serde(default)]
-    pub period: Option<usize>,
-}
-
-impl fmt::Display for FeeV1 {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "Fee=[{} {}", self.amount, self.unit)?;
-        write!(f, " Kinds=\"{:?}\"", self.kinds)?;
-        if let Some(period) = &self.period {
-            write!(f, " Period=\"{}\"", period)?;
-        }
-        write!(f, "]")
-    }
-}
-
-/// Relay fees
-#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
-#[cfg_attr(feature = "speedy", derive(Readable, Writable))]
-pub struct RelayFeesV1 {
-    /// Admission fee (read and write)
-    #[serde(skip_serializing_if = "Vec::is_empty")]
-    #[serde(default)]
-    pub admission: Vec<FeeV1>,
-
-    /// Subscription fee (read)
-    #[serde(skip_serializing_if = "Vec::is_empty")]
-    #[serde(default)]
-    pub subscription: Vec<FeeV1>,
-
-    /// Publication fee (write)
-    #[serde(skip_serializing_if = "Vec::is_empty")]
-    #[serde(default)]
-    pub publication: Vec<FeeV1>,
-}
-
-impl fmt::Display for RelayFeesV1 {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "Relay Fees:")?;
-        write!(f, " Admission=[")?;
-        for fee in &self.admission {
-            write!(f, "{} ", fee)?;
-        }
-        write!(f, "],Subscription=[")?;
-        for fee in &self.subscription {
-            write!(f, "{} ", fee)?;
-        }
-        write!(f, "],Publication=[")?;
-        for fee in &self.publication {
-            write!(f, "{} ", fee)?;
-        }
-        write!(f, "]")
     }
 }
 
 /// Relay information document as described in NIP-11, supplied by a relay
 #[derive(Clone, Debug, PartialEq, Eq)]
-pub struct RelayInformationDocumentV1 {
+pub struct RelayInformationDocumentV2 {
     /// Name of the relay
     pub name: Option<String>,
 
@@ -230,7 +150,7 @@ pub struct RelayInformationDocumentV1 {
     pub version: Option<String>,
 
     /// limitation
-    pub limitation: Option<RelayLimitationV1>,
+    pub limitation: Option<RelayLimitationV2>,
 
     /// retention
     pub retention: Vec<RelayRetentionV1>,
@@ -257,9 +177,9 @@ pub struct RelayInformationDocumentV1 {
     pub other: Map<String, Value>,
 }
 
-impl Default for RelayInformationDocumentV1 {
-    fn default() -> RelayInformationDocumentV1 {
-        RelayInformationDocumentV1 {
+impl Default for RelayInformationDocumentV2 {
+    fn default() -> RelayInformationDocumentV2 {
+        RelayInformationDocumentV2 {
             name: None,
             description: None,
             pubkey: None,
@@ -280,14 +200,14 @@ impl Default for RelayInformationDocumentV1 {
     }
 }
 
-impl RelayInformationDocumentV1 {
+impl RelayInformationDocumentV2 {
     /// If the relay supports the queried `nip`
     pub fn supports_nip(&self, nip: u32) -> bool {
         self.supported_nips.contains(&nip)
     }
 
     #[allow(dead_code)]
-    pub(crate) fn mock() -> RelayInformationDocumentV1 {
+    pub(crate) fn mock() -> RelayInformationDocumentV2 {
         let mut m = Map::new();
         let _ = m.insert(
             "early_nips".to_string(),
@@ -297,7 +217,7 @@ impl RelayInformationDocumentV1 {
                 Value::Number(7.into()),
             ]),
         );
-        RelayInformationDocumentV1 {
+        RelayInformationDocumentV2 {
             name: Some("Crazy Horse".to_string()),
             description: Some("A really wild horse".to_string()),
             pubkey: Some(PublicKeyHex::mock()),
@@ -305,7 +225,7 @@ impl RelayInformationDocumentV1 {
             supported_nips: vec![11, 12, 13, 14],
             software: None,
             version: None,
-            limitation: Some(RelayLimitationV1 {
+            limitation: Some(RelayLimitationV2 {
                 max_message_length: Some(16384),
                 max_subscriptions: Some(20),
                 max_filters: Some(100),
@@ -316,6 +236,9 @@ impl RelayInformationDocumentV1 {
                 min_pow_difficulty: Some(30),
                 auth_required: Some(true),
                 payment_required: Some(true),
+                restricted_writes: Some(true),
+                created_at_lower_limit: None,
+                created_at_upper_limit: None,
             }),
             retention: vec![
                 RelayRetentionV1 {
@@ -326,10 +249,7 @@ impl RelayInformationDocumentV1 {
                             EventKind::EventDeletion,
                             EventKind::Reaction,
                         ]),
-                        EventKindOrRange::Range(vec![
-                            EventKind::ChannelCreation,
-                            EventKind::PublicChatReserved49,
-                        ]),
+                        EventKindOrRange::Range(vec![EventKind::ChannelCreation]),
                     ],
                     time: Some(3600),
                     count: None,
@@ -388,7 +308,7 @@ impl RelayInformationDocumentV1 {
     }
 }
 
-impl fmt::Display for RelayInformationDocumentV1 {
+impl fmt::Display for RelayInformationDocumentV2 {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "Relay Information:")?;
         if let Some(name) = &self.name {
@@ -455,7 +375,7 @@ impl fmt::Display for RelayInformationDocumentV1 {
     }
 }
 
-impl Serialize for RelayInformationDocumentV1 {
+impl Serialize for RelayInformationDocumentV2 {
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
     where
         S: Serializer,
@@ -511,7 +431,7 @@ impl Serialize for RelayInformationDocumentV1 {
     }
 }
 
-impl<'de> Deserialize<'de> for RelayInformationDocumentV1 {
+impl<'de> Deserialize<'de> for RelayInformationDocumentV2 {
     fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
     where
         D: Deserializer<'de>,
@@ -523,13 +443,13 @@ impl<'de> Deserialize<'de> for RelayInformationDocumentV1 {
 struct RidVisitor;
 
 impl<'de> Visitor<'de> for RidVisitor {
-    type Value = RelayInformationDocumentV1;
+    type Value = RelayInformationDocumentV2;
 
     fn expecting(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "A JSON object")
     }
 
-    fn visit_map<M>(self, mut access: M) -> Result<RelayInformationDocumentV1, M::Error>
+    fn visit_map<M>(self, mut access: M) -> Result<RelayInformationDocumentV2, M::Error>
     where
         M: MapAccess<'de>,
     {
@@ -538,7 +458,7 @@ impl<'de> Visitor<'de> for RidVisitor {
             let _ = map.insert(key, value);
         }
 
-        let mut rid: RelayInformationDocumentV1 = Default::default();
+        let mut rid: RelayInformationDocumentV2 = Default::default();
 
         if let Some(Value::String(s)) = map.remove("name") {
             rid.name = Some(s);
@@ -571,7 +491,7 @@ impl<'de> Visitor<'de> for RidVisitor {
             rid.version = Some(s);
         }
         if let Some(v) = map.remove("limitation") {
-            rid.limitation = match serde_json::from_value::<Option<RelayLimitationV1>>(v) {
+            rid.limitation = match serde_json::from_value::<Option<RelayLimitationV2>>(v) {
                 Ok(x) => x,
                 Err(_) => None,
             }
@@ -629,13 +549,13 @@ impl<'de> Visitor<'de> for RidVisitor {
 mod test {
     use super::*;
 
-    test_serde! {RelayInformationDocumentV1, test_relay_information_document_serde}
+    test_serde! {RelayInformationDocumentV2, test_relay_information_document_serde}
 
     #[test]
     fn test_to_json_only() {
         // This is so you can see the JSON limitation.
         // Run with "cargo test toest_to_json_only -- --nocapture"
-        let mock = RelayInformationDocumentV1::mock();
+        let mock = RelayInformationDocumentV2::mock();
         let s = serde_json::to_string(&mock).unwrap();
         println!("{}", s);
     }
@@ -648,7 +568,7 @@ mod test {
     { "kinds": [[30000, 39999]], "count": 1000 },
     { "time": 3600, "count": 10000 }
   ] }"##;
-        let rid: RelayInformationDocumentV1 = serde_json::from_str(json).unwrap();
+        let rid: RelayInformationDocumentV2 = serde_json::from_str(json).unwrap();
         let json2 = serde_json::to_string(&rid).unwrap();
         let expected_json2 = r##"{"name":"A Relay","supported_nips":[11,12],"retention":[{"kinds":[0,1,[5,7],[40,49]],"time":3600},{"kinds":[[40000,49999]],"time":100},{"count":1000,"kinds":[[30000,39999]]},{"count":10000,"time":3600}],"myfield":[1,2]}"##;
         assert_eq!(json2, expected_json2);

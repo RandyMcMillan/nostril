@@ -11,13 +11,25 @@ pub enum Error {
     #[error("Bad Encrypted Message")]
     BadEncryptedMessage,
 
+    /// Bad Encrypted Message due to bad Base64
+    #[error("Bad Encrypted Message due to invalid base64")]
+    BadEncryptedMessageBase64(base64::DecodeError),
+
     /// Base64 error
     #[error("Base64 Decoding Error: {0}")]
     Base64(#[from] base64::DecodeError),
 
-    /// Bech32 error
+    /// Bech32 decode error
     #[error("Bech32 Error: {0}")]
-    Bech32(#[from] bech32::Error),
+    Bech32Decode(#[from] bech32::DecodeError),
+
+    /// Bech32 encode error
+    #[error("Bech32 Error: {0}")]
+    Bech32Encode(#[from] bech32::EncodeError),
+
+    /// Bech32 HRP error
+    #[error("Bech32 Error: {0}")]
+    Bech32Hrp(#[from] bech32::primitives::hrp::Error),
 
     /// Crypto error
     #[error("Crypto Error: {0}")]
@@ -63,14 +75,6 @@ pub enum Error {
     #[error("Invalid Encrypted Event")]
     InvalidEncryptedEvent,
 
-    /// Invalid Event Addr
-    #[error("Invalid event addr")]
-    InvalidEventAddr,
-
-    /// Invalid Event Pointer
-    #[error("Invalid event pointer")]
-    InvalidEventPointer,
-
     /// Invalid event Id
     #[error("Invalid event Id")]
     InvalidId,
@@ -82,6 +86,18 @@ pub enum Error {
     /// Invalid digest length
     #[error("Invalid digest length")]
     InvalidLength(#[from] hmac::digest::InvalidLength),
+
+    /// Invalid NAddr
+    #[error("Invalid naddr")]
+    InvalidNAddr,
+
+    /// Invalid NEvent
+    #[error("Invalid nevent")]
+    InvalidNEvent,
+
+    /// Invalid Operation
+    #[error("Invalid Operation")]
+    InvalidOperation,
 
     /// Invalid Private Key
     #[error("Invalid Private Key")]
@@ -123,6 +139,10 @@ pub enum Error {
     #[error("Missing URL Authority")]
     InvalidUrlMissingAuthority,
 
+    /// Addr to a non-replaceable event kind
+    #[error("Event kind is not replaceable")]
+    NonReplaceableAddr,
+
     /// No Private Key
     #[error("No private key")]
     NoPrivateKey,
@@ -134,10 +154,6 @@ pub enum Error {
     /// Out of Range
     #[error("Out of Range")]
     OutOfRange(usize),
-
-    /// Pad error
-    #[error("Encryption/Decryption padding error")]
-    Pad(#[from] inout::PadError),
 
     /// Parse integer error
     #[error("Parse integer error")]
@@ -164,9 +180,9 @@ pub enum Error {
     #[error("Speedy (de)serialization error: {0}")]
     Speedy(#[from] speedy::Error),
 
-    /// Time error
-    #[error("System Time Error: {0}")]
-    Time(#[from] std::time::SystemTimeError),
+    /// Tag mismatch
+    #[error("Tag mismatch")]
+    TagMismatch,
 
     /// Unknown event kind
     #[error("Unknown event kind = {0}")]

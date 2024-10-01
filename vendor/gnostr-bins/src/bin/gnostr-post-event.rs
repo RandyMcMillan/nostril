@@ -2,7 +2,7 @@ use std::convert::TryInto;
 use std::io::Read;
 use std::{env, process};
 
-use gnostr_types::Event;
+use nostr_types::Event;
 
 static DEFAULT_RELAY_URL: &str = "wss://e.nos.lol";
 fn main() {

@@ -12,16 +12,28 @@
 [package]
 edition = "2021"
 name = "gnip44"
-version = "0.1.1"
-authors = ["Mike Dilger <mike@mikedilger.com>"]
-description = "nostr NIP-44 encryption code"
-homepage = "https://github.com/gnostr-org/gnip44"
+version = "0.0.63"
+authors = [
+    "gnostr admin@gnostr.org",
+    "Mike Dilger <mike@mikedilger.com>",
+]
+build = false
+autobins = false
+autoexamples = false
+autotests = false
+autobenches = false
+description = "gnostr: a git+nostr workflow utility"
+homepage = "https://github.com/gnostr-org/gnostr-bins"
 readme = "README.md"
 license = "MIT"
-repository = "https://github.com/gnostr-org/gnip44"
+repository = "https://github.com/gnostr-org/gnostr-bins"
+
+[lib]
+name = "gnip44"
+path = "src/lib.rs"
 
 [dependencies.base64]
-version = "0.21"
+version = "0.22"
 
 [dependencies.chacha20]
 version = "0.9"
@@ -40,7 +52,7 @@ version = "0.6"
 features = ["getrandom"]
 
 [dependencies.secp256k1]
-version = "0.28"
+version = "0.29"
 
 [dependencies.sha2]
 version = "0.10"
@@ -52,18 +64,8 @@ version = "1.0"
 version = "0.4"
 
 [dev-dependencies.secp256k1]
-version = "0.28"
+version = "0.29"
 features = ["global-context"]
 
 [dev-dependencies.serde_json]
-version = "1.0.111"
-features = [
-    "std",
-    "alloc",
-    "arbitrary_precision",
-    "float_roundtrip",
-    "indexmap",
-    "preserve_order",
-    "raw_value",
-    "unbounded_depth",
-]
+version = "1.0"

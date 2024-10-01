@@ -9,7 +9,7 @@ cargo-release-all:### 	cargo-release-all
 	for t in ffi/*/Cargo.toml;  do echo $$t; cargo b -r -vv --manifest-path $$t; done
 cargo-clean-all:### 	cargo-clean-all - clean release artifacts
 ## 	cargo-clean-all 	recursively cargo clean --release
-	for t in */Cargo.toml;  do echo $$t; cargo clean --release -vv --manifest-path $$t; done
+	for t in **Cargo.toml;  do echo $$t; cargo clean --release -vv --manifest-path $$t; done
 
 cargo-install-bins:### 	cargo-install-bins
 ## 	cargo-install-all 	recursively cargo install -vv $(SUBMODULES)
@@ -24,28 +24,28 @@ cargo-build:### 	cargo build
 ## 	cargo-build q=true
 	@. $(HOME)/.cargo/env
 	@RUST_BACKTRACE=all cargo b $(QUIET)
-cargo-i:cargo-install
+cargo-i: cargo-install
 cargo-install:### 	cargo install --path .
 	#@. $(HOME)/.cargo/env
 	#@cargo install --path .
 	for t in $(SUBMODULES); do echo $$t; cargo install -vv gnostr-$$t --force 2>/dev/null || echo "gnostr-$$t not found"; done
-cargo-br:cargo-build-release### 	cargo-br
+cargo-br: cargo-build-release### 	cargo-br
 ## 	cargo-br q=true
 cargo-build-release:### 	cargo-build-release
 ## 	cargo-build-release q=true
 	@. $(HOME)/.cargo/env
 	@cargo b --release $(QUIET)
-cargo-c:cargo-check
+cargo-c: cargo-check
 cargo-check:### 	cargo-check
 	@. $(HOME)/.cargo/env
 	@cargo c
 cargo-bench:### 	cargo-bench
 	@. $(HOME)/.cargo/env
 	@cargo bench
-cargo-t:cargo-test
+cargo-t: cargo-test
 cargo-test:### 	cargo-test
 	@. $(HOME)/.cargo/env
-	#@cargo test -- --nocapture
+	@cargo test --no-default-features -- --nocapture
 	@cargo test -- --nocapture
 cargo-report:### 	cargo-report
 	@. $(HOME)/.cargo/env

@@ -2,7 +2,6 @@ use super::{KeySecurity, PrivateKey};
 use crate::Error;
 use aes::cipher::{block_padding::Pkcs7, BlockDecryptMut, KeyIvInit};
 use base64::Engine;
-use bech32::{FromBase32, ToBase32};
 use chacha20poly1305::{
     aead::{Aead, AeadCore, KeyInit, Payload},
     XChaCha20Poly1305,
@@ -16,13 +15,14 @@ use sha2::Sha256;
 #[cfg(feature = "speedy")]
 use speedy::{Readable, Writable};
 use std::ops::Deref;
+use unicode_normalization::UnicodeNormalization;
 use zeroize::Zeroize;
 
 // This allows us to detect bad decryptions with wrong passwords.
 const V1_CHECK_VALUE: [u8; 11] = [15, 91, 241, 148, 90, 143, 101, 12, 172, 255, 103];
 const V1_HMAC_ROUNDS: u32 = 100_000;
 
-/// This is an encrypted private key.
+/// This is an encrypted private key (the string inside is the bech32 ncryptsec string)
 #[derive(Clone, Debug, Display, Serialize, Deserialize)]
 #[cfg_attr(feature = "speedy", derive(Readable, Writable))]
 pub struct EncryptedPrivateKey(pub String);
@@ -36,6 +36,16 @@ impl Deref for EncryptedPrivateKey {
 }
 
 impl EncryptedPrivateKey {
+    /// Create from a bech32 string (this just type wraps as the internal stringly already is one)
+    pub fn from_bech32_string(s: String) -> EncryptedPrivateKey {
+        EncryptedPrivateKey(s)
+    }
+
+    /// only correct for version 1 and onwards
+    pub fn as_bech32_string(&self) -> String {
+        self.0.clone()
+    }
+
     /// Decrypt into a Private Key with a passphrase.
     ///
     /// We recommend you zeroize() the password you pass in after you are
@@ -74,11 +84,13 @@ impl EncryptedPrivateKey {
     pub fn version(&self) -> Result<i8, Error> {
         if self.0.starts_with("ncryptsec1") {
             let data = bech32::decode(&self.0)?;
-            if data.0 != "ncryptsec" {
-                return Err(Error::WrongBech32("ncryptsec".to_string(), data.0));
+            if data.0 != *crate::HRP_NCRYPTSEC {
+                return Err(Error::WrongBech32(
+                    crate::HRP_NCRYPTSEC.to_lowercase(),
+                    data.0.to_lowercase(),
+                ));
             }
-            let data = Vec::<u8>::from_base32(&data.1)?;
-            Ok(data[0] as i8)
+            Ok(data.1[0] as i8)
         } else if self.0.len() == 64 {
             Ok(-1)
         } else {
@@ -116,6 +128,7 @@ impl PrivateKey {
             let key_security: u8 = match self.1 {
                 KeySecurity::Weak => 0,
                 KeySecurity::Medium => 1,
+                KeySecurity::NotTracked => 2,
             };
             vec![key_security]
         };
@@ -155,10 +168,9 @@ impl PrivateKey {
                                           // Total length is 91 = 1 + 1 + 16 + 24 + 1 + 48
 
         // bech32 encode
-        Ok(EncryptedPrivateKey(bech32::encode(
-            "ncryptsec",
-            concatenation.to_base32(),
-            bech32::Variant::Bech32,
+        Ok(EncryptedPrivateKey(bech32::encode::<bech32::Bech32>(
+            *crate::HRP_NCRYPTSEC,
+            &concatenation,
         )?))
     }
 
@@ -188,13 +200,15 @@ impl PrivateKey {
     ) -> Result<PrivateKey, Error> {
         // bech32 decode
         let data = bech32::decode(&encrypted.0)?;
-        if data.0 != "ncryptsec" {
-            return Err(Error::WrongBech32("ncryptsec".to_string(), data.0));
+        if data.0 != *crate::HRP_NCRYPTSEC {
+            return Err(Error::WrongBech32(
+                crate::HRP_NCRYPTSEC.to_lowercase(),
+                data.0.to_lowercase(),
+            ));
         }
-        let data = Vec::<u8>::from_base32(&data.1)?;
-        match data[0] {
-            1 => Self::import_encrypted_v1(data, password),
-            2 => Self::import_encrypted_v2(data, password),
+        match data.1[0] {
+            1 => Self::import_encrypted_v1(data.1, password),
+            2 => Self::import_encrypted_v2(data.1, password),
             _ => Err(Error::InvalidEncryptedPrivateKey),
         }
     }
@@ -235,6 +249,7 @@ impl PrivateKey {
         let key_security = match associated_data[0] {
             0 => KeySecurity::Weak,
             1 => KeySecurity::Medium,
+            2 => KeySecurity::NotTracked,
             _ => return Err(Error::InvalidEncryptedPrivateKey),
         };
 
@@ -338,6 +353,9 @@ impl PrivateKey {
 
     // Hash/Stretch password with scrypt into a 32-byte (256-bit) key
     fn password_to_key_v2(password: &str, salt: &[u8; 16], log_n: u8) -> Result<[u8; 32], Error> {
+        // Normalize unicode (NFKC)
+        let password = password.nfkc().collect::<String>();
+
         let params = match scrypt::Params::new(log_n, 8, 1, 32) {
             // r=8, p=1
             Ok(p) => p,
@@ -417,6 +435,25 @@ mod test {
             encrypted.decrypt("nostr").unwrap().as_hex_string(),
             decrypted
         );
+    }
+
+    #[test]
+    fn test_nfkc_unicode_normalization() {
+        // "ÅΩẛ̣"
+        // U+212B U+2126 U+1E9B U+0323
+        let password1: [u8; 11] = [
+            0xE2, 0x84, 0xAB, 0xE2, 0x84, 0xA6, 0xE1, 0xBA, 0x9B, 0xCC, 0xA3,
+        ];
+
+        // "ÅΩẛ̣"
+        // U+00C5 U+03A9 U+1E69
+        let password2: [u8; 7] = [0xC3, 0x85, 0xCE, 0xA9, 0xE1, 0xB9, 0xA9];
+
+        let password1_str = unsafe { std::str::from_utf8_unchecked(password1.as_slice()) };
+        let password2_str = unsafe { std::str::from_utf8_unchecked(password2.as_slice()) };
+
+        let password1_nfkc = password1_str.nfkc().collect::<String>();
+        assert_eq!(password1_nfkc, password2_str);
     }
 }
 

@@ -7,14 +7,13 @@ use gnostr_bins::{
 };
 pub fn handle_command() -> Result<bool, Box<dyn std::error::Error>> {
     let mut args = env::args().peekable();
-    let mut nip: String;
-    let mut relays: String;
-    let mut output_type = String::from("-j"); //default case
-    let program = args.next().unwrap();
+    let relays: String;
+    let output_type: String;
+    let _ = args.next().unwrap();
     //gnostr-get-relays --nip <nip> ?
     if args.len() == 3 && args.peek().unwrap() == "--nip" || args.peek().unwrap() == "-n" {
         let _ = String::from(args.next().unwrap());
-        relays = gnostr_bins::get_relays_by_nip(&args.next().unwrap())?;
+        relays = get_relays_by_nip(&args.next().unwrap())?;
         output_type = args.next().expect("REASON");
         if output_type == "-h" || output_type == "--help" {
             help("");
@@ -37,8 +36,8 @@ pub fn handle_command() -> Result<bool, Box<dyn std::error::Error>> {
         std::process::exit(0);
     } else if args.len() == 2 && args.peek().unwrap() == "--nip" || args.peek().unwrap() == "-n" {
         let _ = String::from(args.next().unwrap());
-        relays = gnostr_bins::get_relays_by_nip(&args.next().unwrap())?;
-        println!("relays:{}", relays);
+        relays = get_relays_by_nip(&args.next().unwrap())?;
+        println!("{}", relays);
         std::process::exit(0);
     }
     let flag = args.next().unwrap(); // must be there or we would not have been called
@@ -102,7 +101,7 @@ fn get() {
     log::info!("{:?}", result.unwrap());
 }
 fn by_nip(nip: &str) {
-    let relays = gnostr_bins::get_relays_by_nip(&nip).clone();
+    let relays = get_relays_by_nip(&nip).clone();
     print!("{}", relays.unwrap());
     std::process::exit(0);
 }

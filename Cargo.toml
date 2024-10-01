@@ -10,7 +10,8 @@ description = "gnostr: git+nostr workflow utility"
 [dependencies]
 bitcoin_hashes = "0.14.0"
 clap = { version = "4.5.18", features = ["derive"] }
-gnostr-bins = { version = "0.0.53", path = "vendor/gnostr-bins" }
+gnostr-bins = { version = "0.0.63", path = "vendor/gnostr-bins" }
+#gnostr-bins = { version = "0.0.53", path = "vendor/gnostr-bins" }
 hex = "0.4.3"
 humantime = "2.1.0"
 zerocopy = "0.7.35"

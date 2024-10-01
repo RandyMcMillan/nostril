@@ -10,14 +10,8 @@ pub use delegation::{DelegationConditions, EventDelegation};
 mod event;
 pub use event::{Event, PreEvent, Rumor, ZapData};
 
-mod event_addr;
-pub use event_addr::EventAddr;
-
 mod event_kind;
 pub use event_kind::{EventKind, EventKindIterator, EventKindOrRange};
-
-mod event_pointer;
-pub use event_pointer::EventPointer;
 
 mod event_reference;
 pub use event_reference::EventReference;
@@ -31,8 +25,17 @@ pub use id::{Id, IdHex};
 mod identity;
 pub use identity::Identity;
 
+mod key_signer;
+pub use key_signer::KeySigner;
+
 mod metadata;
 pub use metadata::Metadata;
+
+mod naddr;
+pub use naddr::NAddr;
+
+mod nevent;
+pub use nevent::NEvent;
 
 mod nip05;
 pub use nip05::Nip05;
@@ -52,13 +55,19 @@ pub use profile::Profile;
 mod public_key;
 pub use public_key::{PublicKey, PublicKeyHex, XOnlyPublicKey};
 
-mod relay_message;
-pub use relay_message::RelayMessage;
-
 mod relay_information_document;
 pub use relay_information_document::{
     Fee, RelayFees, RelayInformationDocument, RelayLimitation, RelayRetention,
 };
+
+mod relay_list;
+pub use relay_list::{RelayList, RelayListUsage};
+
+mod relay_message;
+pub use relay_message::RelayMessage;
+
+mod relay_usage;
+pub use relay_usage::{RelayUsage, RelayUsageSet};
 
 mod satoshi;
 pub use satoshi::MilliSatoshi;
@@ -67,10 +76,10 @@ mod signature;
 pub use signature::{Signature, SignatureHex};
 
 mod signer;
-pub use signer::{KeySigner, Signer};
+pub use signer::Signer;
 
-mod relay_list;
-pub use relay_list::{SimpleRelayList, SimpleRelayUsage};
+mod simple_relay_list;
+pub use simple_relay_list::{SimpleRelayList, SimpleRelayUsage};
 
 mod subscription_id;
 pub use subscription_id::SubscriptionId;
@@ -82,7 +91,7 @@ mod unixtime;
 pub use unixtime::Unixtime;
 
 mod url;
-pub use self::url::{RelayUrl, UncheckedUrl, Url};
+pub use self::url::{RelayOrigin, RelayUrl, UncheckedUrl, Url};
 
 #[cfg(test)]
 mod test {

@@ -1,6 +1,6 @@
 use std::env;
 
-use gnostr_types::IdHex;
+use nostr_types::IdHex;
 
 fn main() {
     //gnostr-fetch-by-id wss://relay.damus.io

@@ -1,4 +1,4 @@
-use super::EventV2;
+use super::{EventV2, Why};
 use crate::types::{Id, SubscriptionId};
 use serde::de::Error as DeError;
 use serde::de::{Deserialize, Deserializer, IgnoredAny, SeqAccess, Visitor};
@@ -36,34 +36,6 @@ pub enum RelayMessageV3 {
     ///     duplicate, pow, blocked, rate-limited, invalid, auth-required,
     ///     restricted or error
     Ok(Id, bool, String),
-}
-
-/// The reason why a relay issued an OK or CLOSED message
-#[derive(Clone, Copy, Debug, Eq, PartialEq, Hash)]
-pub enum Why {
-    /// Authentication is required
-    AuthRequired,
-
-    /// You have been blocked from this relay
-    Blocked,
-
-    /// Your request is a duplicate
-    Duplicate,
-
-    /// Other error
-    Error,
-
-    /// Your request is invalid
-    Invalid,
-
-    /// Proof-of-work is required
-    Pow,
-
-    /// Rejected due to rate limiting
-    RateLimited,
-
-    /// The action you requested is restricted to your identity
-    Restricted,
 }
 
 impl RelayMessageV3 {

@@ -154,7 +154,7 @@ pub fn decrypt(conversation_key: &[u8; 32], base64_ciphertext: &str) -> Result<S
     let mac = &binary_ciphertext[dlen - 32..dlen];
     let keys = get_message_keys(conversation_key, &nonce.try_into().unwrap())?;
     let mut calculated_mac = Hmac::<Sha256>::new_from_slice(&keys.auth())?;
-    calculated_mac.update(&nonce);
+    calculated_mac.update(nonce);
     calculated_mac.update(&buffer);
     let calculated_mac_bytes = calculated_mac.finalize().into_bytes();
     if !constant_time_eq::constant_time_eq(mac, calculated_mac_bytes.as_slice()) {

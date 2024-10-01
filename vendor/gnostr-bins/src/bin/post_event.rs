@@ -1,4 +1,4 @@
-use gnostr_types::Event;
+use nostr_types::Event;
 use std::env;
 use std::io::Read;
 
