@@ -4,7 +4,6 @@ use clap::builder::TypedValueParser as _;
 use clap::Parser;
 use gnostr_bins::{blockheight, relays, weeble, wobble};
 use std::error::Error;
-use std::io::Write;
 use std::process::exit;
 use zerocopy::AsBytes;
 
@@ -106,12 +105,16 @@ fn main() -> Result<(), std::io::Error> {
     let wbhw = format!("{}/{}/{}", get_weeble(), get_blockheight(), get_wobble());
     println!("{}", wbhw);
 
+    //CAUTION: hash_of_string is different than hash.as_bytes_mut!
+    //TODO: gnostr-bins: add from_str and from_bytes
+    let hash_of_string_2001 = sha256::Hash::hash("2001".as_bytes());
+    println!("hash_of_string_2001={}", hash_of_string_2001);
     let hash_of_weeble = sha256::Hash::hash(get_weeble().as_bytes_mut());
-    println!("{}", hash_of_weeble);
-    let mut hash_of_blockheight = sha256::Hash::hash(get_blockheight().as_bytes_mut());
-    println!("{}", hash_of_blockheight);
-    let mut hash_of_wobble = sha256::Hash::hash(get_wobble().as_bytes_mut());
-    println!("{}", hash_of_wobble);
+    println!("hash_of_weeble={}", hash_of_weeble);
+    let hash_of_blockheight = sha256::Hash::hash(get_blockheight().as_bytes_mut());
+    println!("hash_of_blockheight={}", hash_of_blockheight);
+    let hash_of_wobble = sha256::Hash::hash(get_wobble().as_bytes_mut());
+    println!("hash_of_wobble={}", hash_of_wobble);
 
     let hexd = hex::decode("48656c6c6f20776f726c6421");
     println!("{:?}", hexd.unwrap());
