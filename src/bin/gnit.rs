@@ -102,38 +102,100 @@ mod foreign_crate {
 }
 
 fn main() -> Result<(), std::io::Error> {
+    //CAUTION: hash_of_string is different than hash.as_bytes_mut!
+
+    let mut weeble = get_weeble();
+    println!("weeble={}", weeble);
+    let mut weeble_string = get_weeble_string();
+    let mut wobble = get_wobble();
+    println!("wobble={}", wobble);
+    let mut wobble_string = get_wobble_string();
+    let mut blockheight = get_blockheight();
+    println!("blockheight={}", blockheight);
+    let mut blockheight_string = get_blockheight_string();
+    println!("blockheight_string={}", blockheight_string);
+    let mut blockhash = get_blockhash();
+    println!("blockhash={}", blockhash);
+
+    let hash_of_weeble = sha256::Hash::hash(weeble.as_bytes_mut());
+    println!("hash_of_weeble={}", hash_of_weeble);
+
+    let hash_of_weeble_string = sha256::Hash::hash(weeble_string.as_bytes());
+    println!("hash_of_weeble_string={}", hash_of_weeble_string);
+
+    let hash_of_blockheight = sha256::Hash::hash(blockheight.as_bytes());
+    println!("hash_of_blockheight={}", hash_of_blockheight);
+    let hash_of_blockheight_string = sha256::Hash::hash(blockheight_string.as_bytes());
+    println!(
+        "hash_of_blockheight_string={}",
+        (hash_of_blockheight_string)
+    );
+
+    let hash_of_wobble = sha256::Hash::hash(wobble.as_bytes());
+    println!("hash_of_wobble={}", hash_of_wobble);
+
+    let hash_of_wobble_string = sha256::Hash::hash(wobble_string.as_bytes());
+    println!("hash_of_wobble_string={}", hash_of_wobble_string);
+
+    let hexd_weeble = hex::decode(format!("{}", hash_of_weeble));
+    println!("hexd_weeble.unwrap()=\n{:?}", hexd_weeble.unwrap());
+    let hexd_wobble = hex::decode(format!("{}", hash_of_wobble));
+    println!("hexd_wobble.unwrap()=\n{:?}", hexd_wobble.unwrap());
+
+    let mut weeble_vec = Vec::new();
+    let privkey = b"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855";
+    //forward
+    let mut count = 0;
+    for byte in privkey.as_bytes() {
+        print!("{}^{}={} ", count, byte, count ^ byte);
+        weeble_vec.push(byte);
+        count += 1;
+    }
+    println!("");
+    //backwards
+    let mut count = privkey.len() - 1;
+    for byte in &weeble_vec {
+        print!("{}^{} ", count, privkey[count]);
+        count -= 1;
+    }
+    println!("");
+    //symetry
+    let privkey = b"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855";
+    let mut privvirp = Vec::new();
+    let mut count = privkey.len() - 1;
+    for byte in &weeble_vec {
+        print!("{}^{}={} ", *byte, privkey[count], *byte ^ privkey[count]);
+        privvirp.push(*byte ^ privkey[count]);
+        count -= 1;
+    }
+    println!("");
+    for byte in &privvirp {
+        print!("{:?} ", byte);
+    }
+
+    //std::process::exit(0);
+    //println!("weeble_vec={:?}", weeble_vec[0] ^ weeble_vec[0]);
+    //println!("weeble_vec={:?}", weeble_vec[0] ^ weeble_vec[1]);
+    //println!("weeble_vec[0]={}", weeble_vec[0]);
+
+    //xor(hexd_weeble.unwrap(),hexd_wobble.unwrap());
+
     let bhashwbhw = format!(
-        "{}/{}/{}/{}",
+        "{}\n{}\n{}\n{}",
         get_blockhash(),
         get_weeble(),
         get_blockheight(),
         get_wobble()
     );
-    //println!("{}", bhashwbhw);
+    println!("");
+    println!("bhashwbhw={}", bhashwbhw);
 
-    //CAUTION: hash_of_string is different than hash.as_bytes_mut!
-    //TODO: gnostr-bins: add from_str and from_bytes
-    let hash_of_string_2000 = sha256::Hash::hash("2000".as_bytes());
-    //println!("hash_of_string_2000={}", hash_of_string_2000);
-    //println!("hash_of_string_2000={:x}", hash_of_string_2000);
+    //println!("{:?}", xor(format!(b"{:?}", hash_of_wobble.unwrap()), format!(b"{:?}",hash_of_weeble.unwrap())));
 
-    //println!("get_weeble()={}", get_weeble());
-    //println!("get_weeble_string()={}", get_weeble_string());
-
-    let hash_of_weeble = sha256::Hash::hash(get_weeble().as_bytes_mut());
-    //println!("hash_of_weeble={}", hash_of_weeble);
-
-    let hash_of_weeble_string = sha256::Hash::hash(get_weeble_string().as_bytes());
-    //println!("hash_of_weeble_string={}", hash_of_weeble_string);
-
-    let hash_of_blockheight = sha256::Hash::hash(get_blockheight().as_bytes_mut());
-    //println!("hash_of_blockheight={}", hash_of_blockheight);
-
-    let hash_of_wobble = sha256::Hash::hash(get_wobble().as_bytes_mut());
-    //println!("hash_of_wobble={}", hash_of_wobble);
-    //println!("{:?}", xor(hash_of_wobble, b"000000000000"));
-
-    //let res = xor(b"100f00a00000a000000000fff0000000", b"0000f00000a00000000fff0000000001");
+    let res = xor(
+        *b"900f00a00000a000000000fff0000000",
+        *b"0000f00000a00000000fff0000000001",
+    );
     //println!("\nres={:?}",res);
     //let res = xor(b"900f00900090a0900009000900090000", b"1000a0000000000010000fff00000001");
     //println!("\nres={:?}",res);
@@ -143,7 +205,13 @@ fn main() -> Result<(), std::io::Error> {
     //let res = xor(b"ffffffffffffffffffffffffffffffff", b"10000f00000A00001000f000A00A0001");
     //println!("\nres={:?}",res);
 
-    //println!("\nxor:{:?}", xor(b"1000000000000000000000000000000f", b"9000000000000000000000000000000f"));
+    //println!(
+    //    "{:?}",
+    //    xor(
+    //        *b"1000000000000000000000000000000f",
+    //        *b"9000000000000000000000000000000f"
+    //    )
+    //);
     //println!("\nxor:{:?}", xor(b"010000000000000000000000000000f0", b"090000000000000000000000000000f0"));
     //println!("\nxor:{:?}", xor(b"00100000000000000000000000000f00", b"00900000000000000000000000000f00"));
     //println!("\nxor:{:?}", xor(b"0001000000000000000000000000f000", b"0009000000000000000000000000f000"));
@@ -159,7 +227,13 @@ fn main() -> Result<(), std::io::Error> {
     //println!("\nxor:{:?}", xor(b"000000000000010000f0000000000000", b"000000000000090000f0000000000000"));
     //println!("\nxor:{:?}", xor(b"00000000000000100f00000000000000", b"00000000000000900f00000000000000"));
     //println!("\nxor:{:?}", xor(b"0000000000000001f000000000000000", b"0000000000000009f000000000000000"));
-    //println!("\nxor:{:?}", xor(b"000000000000000f1000000000000000", b"000000000000000f9000000000000000"));
+    //println!(
+    //    "{:?}",
+    //    xor(
+    //        *b"000000000000000f1000000000000000",
+    //        *b"000000000000000f9000000000000000"
+    //    )
+    //);
     //println!("\nxor:{:?}", xor(b"00000000000000f00100000000000000", b"00000000000000f00900000000000000"));
     //println!("\nxor:{:?}", xor(b"0000000000000f000010000000000000", b"0000000000000f000090000000000000"));
     //println!("\nxor:{:?}", xor(b"000000000000f0000001000000000000", b"000000000000f0000009000000000000"));
@@ -174,9 +248,16 @@ fn main() -> Result<(), std::io::Error> {
     //println!("\nxor:{:?}", xor(b"000f0000000000000000000000001000", b"000f0000000000000000000000009000"));
     //println!("\nxor:{:?}", xor(b"00f00000000000000000000000000100", b"00f00000000000000000000000000900"));
     //println!("\nxor:{:?}", xor(b"0f000000000000000000000000000010", b"0f000000000000000000000000000090"));
-    //println!("\nxor:{:?}", xor(b"f0000000000000000000000000000001", b"f0000000000000000000000000000009"));
+    //println!(
+    //    "{:?}",
+    //    xor(
+    //        *b"f0000000000000000000000000000001",
+    //        *b"f0000000000000000000000000000009"
+    //    )
+    //);
 
-    let mut sha256_0 = hex::decode(b"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855");
+    let mut sha256_0 =
+        hex::decode(b"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855");
     //for byte in &sha256_0 {
     //for byte in &sha256_0 {
     for byte in &sha256_0.as_mut() {
@@ -187,16 +268,18 @@ fn main() -> Result<(), std::io::Error> {
     //println!("sha256_0.unwrap()=\n{:?}", sha256_0.unwrap());
 
     //for byte in &sha256_0 {
-      //  print!("{:?}",sha256_0.clone().unwrap().pop())
-        //}
+    //  print!("{:?}",sha256_0.clone().unwrap().pop())
+    //}
 
-    let hexd = hex::decode(b"48656c6c6f20776f726c6421");
+    //let hexd = hex::decode(b"48656c6c6f20776f726c6421");
     //println!("hexd.unwrap()=\n{:?}", hexd.unwrap());
-    let hello_world = b"Hello world!00000000000000000000";
-    let hello_worl = b"hello worl!_00000000000000000000";
-    //println!("hello_world=\n{:?}", hello_world);
-    //println!("xored\n{:?}", xor(hello_world, hello_worl));
-    let _ = xor(hello_world, hello_worl);
+    //let hexd = b"48656c6c6f20776f726c642100000000";
+    //let hello_world = b"Hello world!00000000000000000000";
+    //let _ = xor(*hello_world, *hello_world);
+    //println!("");
+    //let _ = xor(*hexd, *hello_world);
+    //println!("");
+    //let _ = xor(*hexd, *hexd);
 
     let args = Args::parse();
     //println!("{args:?}");
@@ -228,27 +311,21 @@ pub fn get_blockheight_string() -> String {
 pub fn get_wobble_string() -> String {
     format!("{}", wobble().unwrap())
 }
-pub fn xor<'a>(left: &'a [u8; 32], right: &'a [u8; 32]) -> Vec<&'a u8> {
-    let mut result = Vec::new();
-    let mut left_count = left.len();
-    //println!("{}", left_count);
-    let right_count = right.len();
-    //println!("{}", right_count);
+pub fn xor<'a>(left: [u8; 32], right: [u8; 32]) -> Vec<u8> {
+    let mut result: Vec<u8> = Vec::new();
     for byte in left {
         result.push(byte);
     }
-    for byte in right {
-        //result.push(byte);
-    }
+    let mut count = left.len() - 1;
     for byte in &result {
-        print!("{}", byte);
-        if left_count > 0 && left_count < right_count {
-            let _ = (result[left_count] ^ right[left_count]);
-            left_count -= 1;
-        }
+        print!(">>>-->{}<---<<<", byte);
+        //if count >= 0 && count <= 31 {
+        result.push(left[count].clone() ^ right[count].clone());
+        count -= 1;
+        //}
+        return result;
     }
-    result
-    //(left[0] ^ right[0]).into()
+    Vec::new()
 }
 pub fn div(left: usize, right: usize) -> usize {
     left / right
