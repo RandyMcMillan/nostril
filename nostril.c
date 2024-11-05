@@ -21,8 +21,8 @@
 
 #define VERSION "0.1.3"
 
-#define MAX_TAGS 32
-#define MAX_TAG_ELEMS 16
+#define MAX_TAGS 1024
+#define MAX_TAG_ELEMS 64
 
 #define HAS_CREATED_AT (1<<1)
 #define HAS_KIND (1<<2)
@@ -86,6 +86,7 @@ void usage()
 	printf("      --pow <difficulty>              number of leading 0 bits of the id to mine\n");
 	printf("      --mine-pubkey                   mine a pubkey instead of id\n");
 	printf("      --tag <key> <value>             add a tag\n");
+	printf("      --tagn <N> <tags * N...>        add a tag with N elements. eg: `--tagn 3 a b c`, `--tagn 0`\n");
 	printf("      -e <event_id>                   shorthand for --tag e <event_id>\n");
 	printf("      -p <pubkey>                     shorthand for --tag p <pubkey>\n");
 	printf("      -t <hashtag>                    shorthand for --tag t <hashtag>\n");
@@ -282,7 +283,7 @@ static int generate_key(secp256k1_context *ctx, struct key *key, int *difficulty
 			clock_gettime(CLOCK_MONOTONIC, &t2);
 			duration = ((t2.tv_sec - t1.tv_sec) * 1e9L + (t2.tv_nsec - t1.tv_nsec)) / 1e6L;
 			pers = (double)attempts / (double)duration;
-			fprintf(stderr, "mined pubkey with %d bits after %" PRIu64 " attempts, %" PRId64 " ms, %f attempts per ms\n", bits, attempts, duration, pers);
+			//fprintf(stderr, "mined pubkey with %d bits after %" PRIu64 " attempts, %" PRId64 " ms, %f attempts per ms\n", bits, attempts, duration, pers);
 			return 1;
 		}
 
@@ -418,6 +419,54 @@ static int nostr_add_tag(struct nostr_event *ev, const char *t1, const char *t2)
 	return nostr_add_tag_n(ev, ts, 2);
 }
 
+static int nostr_add_arg_tags(struct nostr_event *ev, int *argc, const char **argv[])
+{
+	struct nostr_tag *tag;
+	int i;
+	uint64_t n;
+	uint16_t small_n;
+	const char *arg;
+
+	if (*argc == 0) {
+		fprintf(stderr, "expected more arguments to --tagn\n");
+		return 0;
+	}
+
+	arg = *(*argv)++; (*argc)--;
+
+	if (!parse_num(arg, &n)) {
+		fprintf(stderr, "expected X to be a number in --tagn X ...\n");
+		return 0;
+	}
+
+	if (n > MAX_TAG_ELEMS) {
+		fprintf(stderr, "too many --tagn arguments (%"PRIu64" > %d)\n", n, MAX_TAG_ELEMS);
+		return 0;
+	}
+
+	small_n = (uint16_t)n;
+
+	if (ev->num_tags + small_n > MAX_TAGS) {
+		fprintf(stderr, "too many tags (%d + %d > %d)\n", ev->num_tags, small_n, MAX_TAG_ELEMS);
+		return 0;
+	}
+
+	tag = &ev->tags[ev->num_tags++];
+	tag->num_elems = 0;
+
+	for (i = 0; i < small_n; i++) {
+		if (*argc <= 0) {
+			fprintf(stderr, "expected %d tags: --tagn %d ..., got %d args\n", small_n, small_n, i);
+			return 0;
+		}
+		arg = *(*argv)++; (*argc)--;
+		//fprintf(stderr, "got arg '%s' argc(%d)\n", arg, *argc);
+		tag->strs[i] = arg;
+		tag->num_elems++;
+	}
+
+	return 1;
+}
 
 static int parse_args(int argc, const char *argv[], struct args *args, struct nostr_event *ev)
 {
@@ -490,6 +539,11 @@ static int parse_args(int argc, const char *argv[], struct args *args, struct no
 				fprintf(stderr, "couldn't add t tag");
 				return 0;
 			}
+		} else if (!strcmp(arg, "--tagn")) {
+			if (!nostr_add_arg_tags(ev, &argc, &argv)) {
+				return 0;
+			}
+			has_added_tags = 1;
 		} else if (!strcmp(arg, "--tag")) {
 			has_added_tags = 1;
 			if (args->tags) {
@@ -620,7 +674,7 @@ static int mine_event(struct nostr_event *ev, int difficulty)
 			return 0;
 
 		if ((res = count_leading_zero_bits(ev->id)) >= difficulty) {
-			fprintf(stderr, "mined %d bits\n", res);
+			//fprintf(stderr, "mined %d bits\n", res);
 			return 1;
 		}
 	}
@@ -668,8 +722,8 @@ static int make_encrypted_dm(secp256k1_context *ctx, struct key *key,
 		return 0;
 	}
 
-	fprintf(stderr, "shared_secret ");
-	print_hex(shared_secret, 32);
+	//fprintf(stderr, "shared_secret ");
+	//print_hex(shared_secret, 32);
 
 	memcpy(encbuf, ev->content, strlen(ev->content));
 	enclen = aes_encrypt(shared_secret, iv, encbuf, strlen(ev->content));
@@ -768,9 +822,10 @@ int main(int argc, const char *argv[])
 			fprintf(stderr, "could not generate key\n");
 			return 4;
 		}
-		fprintf(stderr, "secret_key ");
+		//fprintf(stderr, "secret_key ");
 		print_hex(key.secret, sizeof(key.secret));
-		fprintf(stderr, "\n");
+                return 0;
+		//fprintf(stderr, "\n");
 	}
 
 	if (args.flags & HAS_ENCRYPT) {
