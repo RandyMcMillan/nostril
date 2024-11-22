@@ -135,7 +135,7 @@ jobs:
 
           ./nostril --sec $PRIVATE_KEY \
           --content "$(gnostr-weeble)/$(gnostr-blockheight)/$(gnostr-wobble)" \
-          -t gnostr \
+          -t gnostr-$BLOCKS_TIP_HASH \
           --tag blocks_tip_hash $BLOCKS_TIP_HASH \
           --tag weeble $(gnostr-weeble) \
           --tag blockheight $(gnostr-blockheight) \
@@ -144,7 +144,7 @@ jobs:
 
           ./nostril --sec $BLOCKS_TIP_HASH \
           --content "$(gnostr-weeble)/$(gnostr-blockheight)/$(gnostr-wobble)" \
-          -t gnostr \
+          -t gnostr-$BLOCKS_TIP_HASH \
           --tag blocks_tip_hash $BLOCKS_TIP_HASH \
           --tag weeble $(gnostr-weeble) \
           --tag blockheight $(gnostr-blockheight) \
@@ -153,7 +153,7 @@ jobs:
 
           ./nostril --sec $BLOCKHEIGHT_SHA256 \
           --content "$(gnostr-weeble)/$(gnostr-blockheight)/$(gnostr-wobble)" \
-          -t gnostr \
+          -t gnostr-$BLOCKS_TIP_HASH \
           --tag blocks_tip_hash $BLOCKS_TIP_HASH \
           --tag weeble $(gnostr-weeble) \
           --tag blockheight $(gnostr-blockheight) \
@@ -162,7 +162,7 @@ jobs:
 
           ./nostril --sec $WEEBLE_SHA256 \
           --content "$(gnostr-weeble)/$(gnostr-blockheight)/$(gnostr-wobble)" \
-          -t gnostr \
+          -t gnostr-$BLOCKS_TIP_HASH \
           --tag blocks_tip_hash $BLOCKS_TIP_HASH \
           --tag weeble $(gnostr-weeble) \
           --tag blockheight $(gnostr-blockheight) \
@@ -171,7 +171,7 @@ jobs:
 
           ./nostril --sec $WEEBLE_ALIAS \
           --content "$(gnostr-weeble)/$(gnostr-blockheight)/$(gnostr-wobble)" \
-          -t gnostr \
+          -t gnostr-$BLOCKS_TIP_HASH \
           --tag blocks_tip_hash $BLOCKS_TIP_HASH \
           --tag weeble $(gnostr-weeble) \
           --tag blockheight $(gnostr-blockheight) \
