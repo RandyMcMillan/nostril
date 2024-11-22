@@ -13,3 +13,4 @@ description = "gnostr: git+nostr workflow utility"
 nostr-commander = "*"
 gnostr-bins = { version = "*" }
 mempool_space = { version = "*" }
+cargo-binstall = "1.10.13"
