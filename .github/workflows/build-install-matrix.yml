@@ -90,9 +90,9 @@ jobs:
 
       - run: rustup default ${{ matrix.rustup }}
       - run: cargo search gnostr --limit 100
-      #- run: cargo install cargo-binstall
-      #- run: cargo-binstall --no-confirm gnostr-bins
-      - run: cargo install mempool_space
+      - run: cargo install cargo-binstall
+      - run: cargo-binstall --no-confirm gnostr-bins
+      - run: cargo-binstall --no-confirm mempool_space
       - run: mkdir -p ~/bin
 
       #- run: for t in */Cargo.toml;do echo $t;cargo b -r -vv --manifest-path $t ;done
@@ -176,6 +176,11 @@ jobs:
           --tag weeble $(gnostr-weeble) \
           --tag blockheight $(gnostr-blockheight) \
           --tag wobble $(gnostr-wobble) | \
+          gnostr-post-event
+
+          ./nostril --sec $(mempool-space --blocks_tip_hash) \
+          --content "BLOCKS_TIP_HEIGHT=$(mempool-space --blocks_tip_height)" \
+          --tag blocks_tip_height $(mempool-space --blocks_tip_height) |
           gnostr-post-event
 
       - run: ./nip-0034 || true
