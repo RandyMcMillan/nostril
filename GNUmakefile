@@ -250,6 +250,7 @@ endif
 	bash -c "[ '$(shell uname -s)' == 'Darwin' ] && brew install pipx                || echo "
 	bash -c "[ '$(shell uname -s)' == 'Darwin' ] && brew install python3             || echo "
 	bash -c "[ '$(shell uname -s)' == 'Darwin' ] && brew install rustup              || echo "
+	bash -c "[ '$(shell uname -s)' == 'Darwin' ] && brew install scdoc               || echo "
 	bash -c "[ '$(shell uname -s)' == 'Darwin' ] && brew install secp256k1           || echo "
 	bash -c "[ '$(shell uname -s)' == 'Darwin' ] && brew install tcl-tk              || echo "
 	bash -c "[ '$(shell uname -s)' == 'Darwin' ] && brew install virtualenv          || echo "
