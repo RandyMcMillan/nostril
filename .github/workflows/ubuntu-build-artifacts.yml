@@ -1,4 +1,4 @@
-name: ubuntu-pre-release
+name: ubuntu-build-artifacts
 
 # Controls when the action will run.
 on:
@@ -11,7 +11,7 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  pre-release:
+  build-artifacts:
     strategy:
       matrix:
         os: [ubuntu-20.04, ubuntu-22.04, ubuntu-latest]
@@ -32,6 +32,7 @@ jobs:
       - name: "Build pre-release"
         run: |
           sudo mkdir -p /usr/local/share/man/man1/nostril.1
+          #make install dist || sudo make install dist
           make all || sudo make all
           mv nostril nostril-$RUNNER_OS-$RUNNER_ARCH
           shasum -a 256 nostril-$RUNNER_OS-$RUNNER_ARCH > nostril-$RUNNER_OS-$RUNNER_ARCH.sha256.txt
@@ -48,6 +49,10 @@ jobs:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
           automatic_release_tag: ${{ matrix.os }}
           prerelease: true
-          title: "Development Build"
+          title: "Build Artifacts"
           files: |
             nostril-*
+            nostril*
+            gnostr*
+            dist/*
+            dist/**.**

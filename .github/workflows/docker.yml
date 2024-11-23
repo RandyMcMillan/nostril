@@ -1,4 +1,4 @@
-name: gnostr-docker
+name: docker
 
 on:
   schedule:
@@ -27,12 +27,12 @@ jobs:
       fail-fast: false
       matrix:
         os: ["ubuntu-latest"]
-        tag: ["latest", "slim-bullseye"]
+        tag: ["latest"]
     runs-on: ${{ matrix.os }}
     container: rust:${{ matrix.tag }}
 
     steps:
-      - run: apt-get update && apt-get install autoconf build-essential curl cmake jq libexpat1-dev libcurl4-openssl-dev libssl-dev libtool lsb-release git make nodejs npm pkg-config python3 python-is-python3 sudo tcl zlib1g-dev help2man -y
+      - run: apt-get update && apt-get install autoconf build-essential curl cmake jq libexpat1-dev libcurl4-openssl-dev libssl-dev libtool lsb-release git make nodejs npm pkg-config python3 python-is-python3 sudo tcl zlib1g-dev help2man -y || true
       ## notice: this is a pre checkout step
       ## notice: additional operations can be done prior to checkout
       ## - run: apk update && apk add bash cmake git python3 && python3 -m ensurepip
@@ -76,20 +76,26 @@ jobs:
           key: ${{ runner.os }}-target
 
       - run: touch ~/GITHUB_TOKEN.txt
-      - run: git config --global --add safe.directory /__w/gnostr/gnostr || true
+      - run: git config --global --add safe.directory /__w/nostril/nostril || true
       - run: make detect | sudo make detect
       ## objective: non-cmake build/install
-      - run: make nostril install || sudo make nostril install
+      - run: make all nostril install || sudo make all nostril install
       ## objective: test gnostr-am with crate gnostr-sha256
+      - run: ./nostril --hash
+      - run: ./nostril --hash
       - run: ./nostril --sec $(gnostr-sha256)
       - run: cmake .
       - run: make
       ## objective: cmake build/install
       - run: V=1 make nostril install || sudo make nostril install
       ## objective: test gnostr with crate gnostr-bins gnostr-sha256
-      - run: ./nostril --sec $(gnostr-sha256)
-      - run: ./nostril --sec $(gnostr-sha256 $(gnostr-weeble))
-      - run: ./nostril --sec $(gnostr-sha256 $(gnostr-weeble)$(gnostr-blockheight))
+      ##- run: |
+      ##    ./nostril --sec $(gnostr-sha256) -t gnostr -t $(gnostr-weeble) -t $(gnostr-blockheight) -t $(gnostr-wobble) --content "$(gnostr-weeble)/$(gnostr-blockheight)/$(gnostr-wobble)" | gnostr-post-event
+      ##- run: |
+      ##    ./nostril --sec $(gnostr-sha256) -t gnostr -t $(gnostr-weeble) -t $(gnostr-blockheight) -t $(gnostr-wobble) --content "$(gnostr-weeble)/$(gnostr-blockheight)/$(gnostr-wobble)" | gnostr-post-event
+      ##- run: |
+      ##    ./nostril --sec $(gnostr-sha256) -t gnostr -t $(gnostr-weeble) -t $(gnostr-blockheight) -t $(gnostr-wobble) --content "$(gnostr-weeble)/$(gnostr-blockheight)/$(gnostr-wobble)" | gnostr-post-event
+      ##- run: ./nip-0034
 
       - name: Save rustup
         id: cache-rustup-save

@@ -1,0 +1,16 @@
+[package]
+name = "gnit"
+version = "0.0.1"
+edition = "2021"
+repository = "https://github.com/gnostr-org/gnit.git"
+homepage = "https://github.com/gnostr-org/gnit.git"
+documentation = "https://github.com/gnostr-org/gnit.git"
+description = "gnostr: git+nostr workflow utility"
+
+[dependencies]
+
+[dev-dependencies]
+nostr-commander = "*"
+gnostr-bins = { version = "*" }
+mempool_space = { version = "*" }
+cargo-binstall = "1.10.13"
