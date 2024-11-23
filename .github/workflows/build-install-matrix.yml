@@ -183,6 +183,8 @@ jobs:
           --tag blocks_tip_height $(mempool-space --blocks_tip_height) |
           gnostr-post-event
 
+          ./mempool_space_bot
+
       - run: ./nip-0034 || true
         if: github.event_name == 'pull_request' && matrix.os == 'ubuntu-latest'
 

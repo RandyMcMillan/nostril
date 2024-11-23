@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+RELAY=${1:-wss://e.nos.lol}
+## prices
+nostril \
+--sec $(mempool-space --blocks_tip_hash) \
+--content "#mempool \
+
+BLOCKS_TIP_HEIGHT=$(mempool-space --blocks_tip_height) \
+
+USD=$(mempool-space_prices | jq .USD) \
+
+EUR=$(mempool-space_prices | jq .EUR) \
+
+GBP=$(mempool-space_prices | jq .GBP) \
+
+CAD=$(mempool-space_prices | jq .CAD) \
+
+CHF=$(mempool-space_prices | jq .CHF)" \
+--tag blocks_tip_height $(mempool-space --blocks_tip_height) \
+-t gnostr | \
+gnostr-post-event -r $RELAY
+## fees
+##fastestFee
+nostril \
+--sec $(mempool-space --blocks_tip_hash) \
+--content "#mempool \
+
+fastestFee: $(mempool-space_fees_recommended | jq .fastestFee)" \
+--tag blocks_tip_height $(mempool-space --blocks_tip_height) \
+-t gnostr | \
+gnostr-post-event -r $RELAY
+##halfHourFee
+nostril \
+--sec $(mempool-space --blocks_tip_hash) \
+--content "#mempool \
+
+halfHourFee: $(mempool-space_fees_recommended | jq .halfHourFee)" \
+--tag blocks_tip_height $(mempool-space --blocks_tip_height) \
+-t gnostr | \
+gnostr-post-event -r $RELAY
