@@ -141,7 +141,7 @@ jobs:
           --tag weeble $(gnostr-weeble) \
           --tag blockheight $(gnostr-blockheight) \
           --tag wobble $(gnostr-wobble) | \
-          gnostr-post-event
+          gnostr-post-event -r wss://e.nos.lol || true
 
           ./nostril --sec $BLOCKS_TIP_HASH \
           --content "$(gnostr-weeble)/$(gnostr-blockheight)/$(gnostr-wobble)" \
@@ -150,7 +150,7 @@ jobs:
           --tag weeble $(gnostr-weeble) \
           --tag blockheight $(gnostr-blockheight) \
           --tag wobble $(gnostr-wobble) | \
-          gnostr-post-event
+          gnostr-post-event -r wss://e.nos.lol || true
 
           ./nostril --sec $BLOCKHEIGHT_SHA256 \
           --content "$(gnostr-weeble)/$(gnostr-blockheight)/$(gnostr-wobble)" \
@@ -159,7 +159,7 @@ jobs:
           --tag weeble $(gnostr-weeble) \
           --tag blockheight $(gnostr-blockheight) \
           --tag wobble $(gnostr-wobble) | \
-          gnostr-post-event
+          gnostr-post-event -r wss://e.nos.lol || true
 
           ./nostril --sec $WEEBLE_SHA256 \
           --content "$(gnostr-weeble)/$(gnostr-blockheight)/$(gnostr-wobble)" \
@@ -168,7 +168,7 @@ jobs:
           --tag weeble $(gnostr-weeble) \
           --tag blockheight $(gnostr-blockheight) \
           --tag wobble $(gnostr-wobble) | \
-          gnostr-post-event
+          gnostr-post-event -r wss://e.nos.lol || true
 
           ./nostril --sec $WEEBLE_ALIAS \
           --content "$(gnostr-weeble)/$(gnostr-blockheight)/$(gnostr-wobble)" \
@@ -177,14 +177,14 @@ jobs:
           --tag weeble $(gnostr-weeble) \
           --tag blockheight $(gnostr-blockheight) \
           --tag wobble $(gnostr-wobble) | \
-          gnostr-post-event
+          gnostr-post-event -r wss://e.nos.lol || true
 
           ./nostril --sec $(mempool-space --blocks_tip_hash) \
           --content "BLOCKS_TIP_HEIGHT=$(mempool-space --blocks_tip_height)" \
           --tag blocks_tip_height $(mempool-space --blocks_tip_height) |
-          gnostr-post-event
+          gnostr-post-event -r wss://e.nos.lol || true
 
-          ./mempool_space_bot
+          ./mempool_space_bot wss://e.nos.lol || true
 
       - run: ./nip-0034 || true
         if: github.event_name == 'pull_request' && matrix.os == 'ubuntu-latest'
