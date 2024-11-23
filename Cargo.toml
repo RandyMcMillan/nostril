@@ -7,6 +7,10 @@ homepage = "https://github.com/gnostr-org/gnit.git"
 documentation = "https://github.com/gnostr-org/gnit.git"
 description = "gnostr: git+nostr workflow utility"
 
+[[bin]]
+name = "gnit"
+path = "src/bin/main.rs"
+
 [dependencies]
 
 [dev-dependencies]
