@@ -27,35 +27,27 @@ cargo-install-bins:### 	cargo-install-bins
 cargo-b:cargo-build### 	cargo b
 cargo-build:### 	cargo build
 ## 	cargo-build q=true
-	@. $(HOME)/.cargo/env || true
 	@RUST_BACKTRACE=all cargo b $(QUIET)
 cargo-i:cargo-install
 cargo-install:### 	cargo install --path .
-	@. $(HOME)/.cargo/env || true
 	@cargo install --path . $(FORCE)
 cargo-br:cargo-build-release### 	cargo-br
 ## 	cargo-br q=true
 cargo-build-release:### 	cargo-build-release
 ## 	cargo-build-release q=true
-	@. $(HOME)/.cargo/env || true
 	@cargo b --release $(QUIET)
 cargo-c:cargo-check
 cargo-check:### 	cargo-check
-	@. $(HOME)/.cargo/env || true
 	@cargo c
 cargo-bench:### 	cargo-bench
-	@. $(HOME)/.cargo/env || true
 	@cargo bench
 cargo-t:cargo-test
 cargo-test:### 	cargo-test
-	@. $(HOME)/.cargo/env || true
 	@cargo test .
 cargo-tr:cargo-test-release
 cargo-test-release:### 	cargo-test-release
-	@. $(HOME)/.cargo/env || true
 	@cargo test --release .
 cargo-report:### 	cargo-report
-	@. $(HOME)/.cargo/env || true
 	cargo report future-incompatibilities --id 1
 
 ##===============================================================================
