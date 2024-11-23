@@ -7,15 +7,15 @@ nostril \
 
 BLOCKS_TIP_HEIGHT=$(mempool-space --blocks_tip_height) \
 
-USD=$(mempool-space_prices | jq .USD) \
+USD=$(mempool-space_prices | gnostr-xq .USD) \
 
-EUR=$(mempool-space_prices | jq .EUR) \
+EUR=$(mempool-space_prices | gnostr-xq .EUR) \
 
-GBP=$(mempool-space_prices | jq .GBP) \
+GBP=$(mempool-space_prices | gnostr-xq .GBP) \
 
-CAD=$(mempool-space_prices | jq .CAD) \
+CAD=$(mempool-space_prices | gnostr-xq .CAD) \
 
-CHF=$(mempool-space_prices | jq .CHF)" \
+CHF=$(mempool-space_prices | gnostr-xq .CHF)" \
 --tag blocks_tip_height $(mempool-space --blocks_tip_height) \
 -t gnostr | \
 gnostr-post-event -r $RELAY
@@ -25,7 +25,7 @@ nostril \
 --sec $(mempool-space --blocks_tip_hash) \
 --content "#mempool \
 
-fastestFee: $(mempool-space_fees_recommended | jq .fastestFee)" \
+fastestFee: $(mempool-space_fees_recommended | gnostr-xq .fastestFee)" \
 --tag blocks_tip_height $(mempool-space --blocks_tip_height) \
 -t gnostr | \
 gnostr-post-event -r $RELAY
@@ -34,7 +34,7 @@ nostril \
 --sec $(mempool-space --blocks_tip_hash) \
 --content "#mempool \
 
-halfHourFee: $(mempool-space_fees_recommended | jq .halfHourFee)" \
+halfHourFee: $(mempool-space_fees_recommended | gnostr-xq .halfHourFee)" \
 --tag blocks_tip_height $(mempool-space --blocks_tip_height) \
 -t gnostr | \
 gnostr-post-event -r $RELAY
