@@ -70,6 +70,7 @@ jobs:
             target
           key: ${{ runner.os }}-target-${{ matrix.rustup }}
 
+      - uses: cargo-bins/cargo-binstall@main
       - uses: actions/checkout@v3
         with:
           submodules: 'true'
@@ -90,8 +91,8 @@ jobs:
 
       - run: rustup default ${{ matrix.rustup }}
       - run: cargo search gnostr --limit 100
-      - run: cargo install cargo-binstall
-      #- run: cargo-binstall --no-confirm gnostr-bins
+      - run: curl -L --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/cargo-bins/cargo-binstall/main/install-from-binstall-release.sh | bash
+      - run: cargo-binstall --no-confirm gnostr-bins
       - run: cargo-binstall --no-confirm mempool_space
       - run: cargo-binstall --no-confirm gnostr-xq
       - run: mkdir -p ~/bin
