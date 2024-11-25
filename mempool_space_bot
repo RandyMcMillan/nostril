@@ -1,4 +1,10 @@
 #!/usr/bin/env bash
+type -P cargo-binstall || \
+curl -L --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/cargo-bins/cargo-binstall/main/install-from-binstall-release.sh | bash
+type -P mempool-space || cargo binstall mempool_space || cargo install mempool_space
+type -P gnostr-post-event || cargo binstall gnostr-bins || cargo install gnostr-bins
+type -P gnostr-xq || cargo binstall gnostr-xq || cargo install gnostr-xq
+
 RELAY=${1:-wss://e.nos.lol}
 ## prices
 nostril \
@@ -29,6 +35,7 @@ fastestFee: $(mempool-space_fees_recommended | gnostr-xq .fastestFee)" \
 --tag blocks_tip_height $(mempool-space --blocks_tip_height) \
 -t gnostr | \
 gnostr-post-event -r $RELAY
+
 ##halfHourFee
 nostril \
 --sec $(mempool-space --blocks_tip_hash) \
