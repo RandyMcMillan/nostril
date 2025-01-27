@@ -90,7 +90,7 @@ jobs:
 
       - run: rustup default ${{ matrix.rustup }}
       - run: cargo search gnostr --limit 100
-      - run: cargo install --locked cargo-binstall
+      - run: cargo install --locked cargo-binstall@1.9
       #- run: cargo-binstall --no-confirm gnostr-bins
       - run: cargo-binstall --no-confirm mempool_space
       - run: cargo-binstall --no-confirm gnostr-xq
