@@ -24,9 +24,9 @@ all: libsecp256k1.a nostril docs## 	nostril docs
 .PHONY:docs doc/nostril.1
 doc: docs
 docs: doc/nostril.1## 	docs
-doc/nostril.1: README.md## 	doc/nostril.1
-	@scdoc < $^ > $@ || help2man ./nostril > doc/nostril.1 || $(MAKE) all
-	git commit doc -m "doc/nostril.1:update" --allow-empty || true
+doc/nostril.1: README.md nostril## 	doc/nostril.1
+	@scdoc < $< > $@ 2>/dev/null || help2man ./nostril > $@ 2>/dev/null || touch $@
+	@git diff --quiet doc/nostril.1 || git commit doc -m "doc/nostril.1:update" --allow-empty 2>/dev/null || true
 
 version: nostril.c## 	version
 	@git fetch --all --tags -f
