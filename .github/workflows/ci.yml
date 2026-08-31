@@ -1,0 +1,42 @@
+name: CI
+
+on:
+  push:
+    branches: [master, main]
+  pull_request:
+    branches: [master, main]
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-20.04
+          - ubuntu-22.04
+          - ubuntu-latest
+          - macos-13
+          - macos-latest
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Install dependencies (macOS)
+        if: runner.os == 'macOS'
+        run: |
+          brew install libtool scdoc
+          echo "/opt/homebrew/opt/libtool/libexec/gnubin" >> "$GITHUB_PATH"
+
+      - name: Install dependencies (Ubuntu)
+        if: runner.os == 'Linux'
+        run: sudo apt-get update && sudo apt-get install -y build-essential scdoc
+
+      - name: Build
+        run: make
+
+      - name: Smoke test
+        run: |
+          ./nostril --hash ''
+          ./nostril --version
