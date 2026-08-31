@@ -455,7 +455,6 @@ nvm-clean: ## 	nvm-clean
 
 -include libsecp256k1.mk
 -include gnostr.mk
--include cargo.mk
 -include tests.mk
 
 # vim: set noexpandtab:
