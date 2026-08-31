@@ -31,7 +31,7 @@ jobs:
 
       - name: Install dependencies (Ubuntu)
         if: runner.os == 'Linux'
-        run: sudo apt-get update && sudo apt-get install -y build-essential scdoc
+        run: sudo apt-get update && sudo apt-get install -y build-essential autoconf automake libtool
 
       - name: Build
         run: make

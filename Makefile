@@ -9,7 +9,7 @@ ARS = libsecp256k1.a $(LIBSODIUM_AR)
 
 SUBMODULES = deps/secp256k1 deps/libsodium
 
-all: nostril docs
+all: nostril
 
 docs: doc/nostril.1
 
