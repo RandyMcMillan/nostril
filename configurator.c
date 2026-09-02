@@ -134,6 +134,9 @@ static const struct test base_tests[] = {
 	  "DEFINES_FUNC", "HAVE_BYTESWAP_H", NULL,
 	  "#include <byteswap.h>\n"
 	  "static int func(int x) { return bswap_64(x); }" },
+	{ "HAVE_OSBYTEORDER_H", "<libkern/OSByteOrder.h>",
+	  "OUTSIDE_MAIN", NULL, NULL,
+	  "#include <libkern/OSByteOrder.h>\n" },
 	{ "HAVE_LITTLE_ENDIAN", "little endian",
 	  "INSIDE_MAIN|EXECUTE", NULL, NULL,
 	  "union { int i; char c[sizeof(int)]; } u;\n"

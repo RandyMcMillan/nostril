@@ -60,6 +60,22 @@
 
 #if HAVE_BYTESWAP_H
 #include <byteswap.h>
+#elif HAVE_OSBYTEORDER_H
+#include <libkern/OSByteOrder.h>
+static inline uint16_t bswap_16(uint16_t val)
+{
+	return OSSwapInt16(val);
+}
+
+static inline uint32_t bswap_32(uint32_t val)
+{
+	return OSSwapInt32(val);
+}
+
+static inline uint64_t bswap_64(uint64_t val)
+{
+	return OSSwapInt64(val);
+}
 #else
 /**
  * bswap_16 - reverse bytes in a uint16_t value.
@@ -88,7 +104,7 @@ static inline uint32_t bswap_32(uint32_t val)
 }
 #endif /* !HAVE_BYTESWAP_H */
 
-#if !HAVE_BSWAP_64
+#if !HAVE_BSWAP_64 && !HAVE_OSBYTEORDER_H
 /**
  * bswap_64 - reverse bytes in a uint64_t value.
  * @val: value whose bytes to swap.
