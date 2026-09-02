@@ -73,6 +73,19 @@ struct nostr_event {
 	int num_tags;
 };
 
+static int hash_string(const char *input)
+{
+	struct sha256 hash;
+	char hex[65];
+
+	sha256(&hash, input, strlen(input));
+	if (!hex_encode(hash.u.u8, sizeof(hash.u.u8), hex, sizeof(hex)))
+		return 0;
+
+	printf("%s\n", hex);
+	return 1;
+}
+
 void usage()
 {
 	printf("usage: nostril [OPTIONS]\n");
@@ -80,6 +93,8 @@ void usage()
 	printf("  OPTIONS\n");
 	printf("\n");
 	printf("      --content <string>              the content of the note\n");
+	printf("      --hash <string>                 print the sha256 hash of the provided string\n");
+	printf("      --version                       print the nostril version\n");
 	printf("      --dm <hex pubkey>               make an encrypted dm to said pubkey. sets kind and tags.\n");
 	printf("      --giftwrap-to <hex pubkey>      make an encrypted giftwrap to said pubkey.\n");
 	printf("      --envelope                      wrap in [\"EVENT\",...] for easy relaying\n");
@@ -943,6 +958,19 @@ int main(int argc, const char *argv[])
 
 	if (argc < 2)
 		usage();
+
+	if (argc == 2 && !strcmp(argv[1], "--version")) {
+		printf("%s\n", VERSION);
+		return 0;
+	}
+
+	if (argc == 3 && !strcmp(argv[1], "--hash")) {
+		if (!hash_string(argv[2])) {
+			fprintf(stderr, "could not hash input\n");
+			return 1;
+		}
+		return 0;
+	}
 
         if (!init_secp_context(&ctx))
 		return 2;
