@@ -9,7 +9,7 @@ ARS = libsecp256k1.a $(LIBSODIUM_AR)
 
 SUBMODULES = deps/secp256k1 deps/libsodium
 
-all: nostril
+all: prepare nostril
 
 docs: doc/nostril.1
 
@@ -65,7 +65,17 @@ libsecp256k1.a: deps/secp256k1/.libs/libsecp256k1.a
 	@echo "cc $<"
 	@$(CC) $(CFLAGS) -c $< -o $@
 
-nostril: $(HEADERS) $(OBJS) $(ARS)
+prepare:
+	@case "$$(uname -s)" in \
+		Darwin) bad_fmt='ELF' ;; \
+		*) bad_fmt='Mach-O' ;; \
+	esac; \
+	if find . deps/secp256k1 deps/libsodium -type f -name '*.o' -exec file {} + 2>/dev/null | grep -vq "$$bad_fmt"; then \
+		echo "  CLEAN stale foreign build outputs"; \
+		$(MAKE) clean; \
+	fi
+
+nostril: prepare $(HEADERS) $(OBJS) $(ARS)
 	$(CC) $(CFLAGS) $(LDFLAGS) $(OBJS) $(ARS) -o $@
 
 install: all
@@ -82,7 +92,7 @@ configurator: configurator.c
 	$(CC) $< -o $@
 
 clean:
-	rm -f nostril *.o *.a
+	rm -f nostril configurator *.o *.a config.h
 	rm -rf deps/secp256k1
 
 tags: fake
